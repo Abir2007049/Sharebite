@@ -38,7 +38,12 @@ public class HttpJsonClient {
     @WorkerThread
     @NonNull
     public <T> T get(@NonNull String url, @NonNull Type type) throws ApiException {
-        String body = getString(url);
+        return parse(getString(url), type);
+    }
+
+    /** Parses a JSON body; separated from the transport so it can be unit tested. */
+    @NonNull
+    <T> T parse(@NonNull String body, @NonNull Type type) throws ApiException {
         try {
             T parsed = gson.fromJson(body, type);
             if (parsed == null) {

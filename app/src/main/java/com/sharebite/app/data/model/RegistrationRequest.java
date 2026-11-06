@@ -21,7 +21,8 @@ public final class RegistrationRequest {
                                @NonNull String phone, @NonNull UserRole role,
                                @Nullable String organizationName, @Nullable ProviderType providerType) {
         this.fullName = fullName.trim();
-        this.email = email.trim();
+        // Firebase Auth stores emails in lower case; security rules compare against the token email.
+        this.email = email.trim().toLowerCase(java.util.Locale.ROOT);
         this.password = password;
         this.phone = phone.trim();
         this.role = role;

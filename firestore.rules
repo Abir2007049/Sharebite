@@ -1,0 +1,311 @@
+rules_version = '2';
+
+// ShareBite Cloud Firestore security rules.
+//
+// The Android client performs every stock / reservation change inside a transaction, but the
+// rules below are the authority: they re-validate ownership, roles, state transitions and
+// quantity arithmetic so a modified client cannot oversell a listing, self-verify a charity,
+// or change someone else's reservation.
+//
+// Tested with the Firestore emulator: see firebase-tests/rules.test.mjs.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- helpers ------------------------------------------------------------------
+
+    function signedIn() { return request.auth != null; }
+    function uid() { return request.auth.uid; }
+    // Reviewers get a custom claim {admin: true} via the Admin SDK (see README).
+    function isAdmin() { return signedIn() && request.auth.token.get('admin', false) == true; }
+
+    function userPath(id) { return /databases/$(database)/documents/users/$(id); }
+    function listingPath(id) { return /databases/$(database)/documents/foodListings/$(id); }
+    function reservationPath(id) { return /databases/$(database)/documents/reservations/$(id); }
+    function me() { return get(userPath(uid())).data; }
+
+    function changedKeys() { return request.resource.data.diff(resource.data).affectedKeys(); }
+    function onlyChanged(keys) { return changedKeys().hasOnly(keys); }
+    function str(v, min, max) { return v is string && v.size() >= min && v.size() <= max; }
+    function optStr(v, max) { return v == null || (v is string && v.size() <= max); }
+
+    // ---------- users/{userId} -----------------------------------------------------------
+
+    match /users/{userId} {
+      // Signed-in users can see each other's public profile (name, phone for pickups).
+      allow read: if signedIn();
+
+      allow create: if signedIn() && uid() == userId
+        && request.resource.data.uid == userId
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.role in ['PROVIDER', 'RECEIVER', 'CHARITY']
+        && str(request.resource.data.fullName, 2, 60)
+        && str(request.resource.data.phone, 7, 20)
+        && optStr(request.resource.data.organizationName, 80)
+        && request.resource.data.active == true
+        && request.resource.data.createdAt == request.time
+        // Nobody can register as verified.
+        && request.resource.data.verificationStatus ==
+             (request.resource.data.role == 'CHARITY' ? 'UNVERIFIED' : 'NOT_REQUIRED');
+
+      allow update: if isAdmin()
+        // Ordinary profile edits: identity, role, status and verification are locked.
+        || (signedIn() && uid() == userId
+            && !changedKeys().hasAny(['uid', 'email', 'role', 'createdAt', 'active', 'verificationStatus'])
+            && str(request.resource.data.fullName, 2, 60)
+            && str(request.resource.data.phone, 7, 20)
+            && optStr(request.resource.data.organizationName, 80))
+        // A charity moving itself to PENDING, only together with a submission document.
+        || (signedIn() && uid() == userId
+            && resource.data.role == 'CHARITY'
+            && onlyChanged(['verificationStatus'])
+            && resource.data.verificationStatus in ['UNVERIFIED', 'REJECTED']
+            && request.resource.data.verificationStatus == 'PENDING'
+            && getAfter(/databases/$(database)/documents/charityVerifications/$(userId)).data.verificationStatus == 'PENDING');
+
+      allow delete: if false;
+    }
+
+    // ---------- charityVerifications/{organizationId} ------------------------------------
+
+    match /charityVerifications/{orgId} {
+      allow read: if signedIn() && (uid() == orgId || isAdmin());
+
+      allow create, update: if isAdmin()
+        || (signedIn() && uid() == orgId
+            && me().role == 'CHARITY'
+            && me().verificationStatus in ['UNVERIFIED', 'REJECTED']
+            && request.resource.data.organizationId == orgId
+            && request.resource.data.verificationStatus == 'PENDING'
+            && request.resource.data.reviewedAt == null
+            && request.resource.data.reviewerNote == null
+            && str(request.resource.data.organizationName, 2, 80)
+            && str(request.resource.data.registrationNumber, 1, 60)
+            && str(request.resource.data.contactPerson, 2, 60)
+            && str(request.resource.data.organizationAddress, 1, 200)
+            && str(request.resource.data.description, 1, 1000)
+            && request.resource.data.submittedDocuments is list
+            && request.resource.data.submittedDocuments.size() <= 5);
+
+      allow delete: if isAdmin();
+    }
+
+    // ---------- foodListings/{listingId} -------------------------------------------------
+
+    match /foodListings/{listingId} {
+
+      function validContent(d) {
+        return str(d.title, 3, 80)
+          && str(d.description, 10, 1000)
+          && d.category in ['COOKED_MEALS', 'BAKERY', 'FRUITS', 'VEGETABLES', 'DAIRY', 'PACKAGED', 'OTHER']
+          && d.unit in ['PORTIONS', 'PIECES', 'BOXES', 'PACKS', 'KILOGRAMS', 'LITRES']
+          && d.distributionType in ['FREE', 'DISCOUNTED', 'CHARITY']
+          && d.totalQuantity is int && d.totalQuantity >= 1 && d.totalQuantity <= 1000
+          && d.availableQuantity is int && d.availableQuantity >= 0 && d.availableQuantity <= d.totalQuantity
+          && d.preparationTime is timestamp && d.pickupStartTime is timestamp && d.pickupDeadline is timestamp
+          && d.pickupDeadline > d.pickupStartTime
+          && d.pickupDeadline > d.preparationTime
+          && str(d.pickupAddress, 5, 200)
+          // Food-safety information is mandatory.
+          && str(d.storageInformation, 3, 300)
+          && str(d.allergens, 1, 300)
+          && optStr(d.foodSafetyNotes, 300)
+          && d.safetyDeclared == true
+          && ((d.distributionType == 'DISCOUNTED'
+                && d.originalPrice is number && d.discountedPrice is number
+                && d.discountedPrice > 0 && d.discountedPrice < d.originalPrice)
+              || (d.distributionType != 'DISCOUNTED' && d.discountedPrice == 0))
+          && ((d.latitude == null && d.longitude == null)
+              || (d.latitude is number && d.latitude >= -90 && d.latitude <= 90
+                  && d.longitude is number && d.longitude >= -180 && d.longitude <= 180));
+      }
+
+      allow read: if signedIn();
+
+      allow create: if signedIn()
+        && me().role == 'PROVIDER'
+        && request.resource.data.providerId == uid()
+        && request.resource.data.listingId == listingId
+        && request.resource.data.status == 'AVAILABLE'
+        && request.resource.data.availableQuantity == request.resource.data.totalQuantity
+        && request.resource.data.lastReservationId == null
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.pickupDeadline > request.time
+        && request.resource.data.pickupDeadline < request.time + duration.value(8, 'd')
+        && request.resource.data.preparationTime < request.time + duration.value(10, 'm')
+        && validContent(request.resource.data);
+
+      // Owner: edit content and manage lifecycle. Units already reserved are preserved.
+      allow update: if signedIn() && resource.data.providerId == uid()
+        && request.resource.data.providerId == resource.data.providerId
+        && request.resource.data.listingId == resource.data.listingId
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.lastReservationId == resource.data.lastReservationId
+        && request.resource.data.status in ['AVAILABLE', 'FULLY_RESERVED', 'EXPIRED', 'COMPLETED', 'CANCELLED']
+        // Closed listings stay closed.
+        && (resource.data.status in ['AVAILABLE', 'FULLY_RESERVED', 'EXPIRED']
+            || request.resource.data.status == resource.data.status)
+        && validContent(request.resource.data)
+        && (!changedKeys().hasAny(['totalQuantity'])
+            || request.resource.data.totalQuantity - request.resource.data.availableQuantity
+                 == resource.data.totalQuantity - resource.data.availableQuantity)
+        && (!changedKeys().hasAny(['distributionType'])
+            || resource.data.availableQuantity == resource.data.totalQuantity)
+        && (!changedKeys().hasAny(['pickupDeadline']) || request.resource.data.pickupDeadline > request.time);
+
+      // Anyone else may only move stock as part of a reservation they make or cancel.
+      allow update: if signedIn() && resource.data.providerId != uid()
+        && onlyChanged(['availableQuantity', 'status', 'lastReservationId', 'updatedAt'])
+        && request.resource.data.updatedAt == request.time
+        && (isReserve() || isRelease());
+
+      // Reserve: a new PENDING reservation by the caller, created in the same transaction,
+      // for exactly the quantity removed.
+      function isReserve() {
+        let path = reservationPath(request.resource.data.lastReservationId);
+        let r = getAfter(path).data;
+        let newQty = request.resource.data.availableQuantity;
+        return !exists(path)
+          && r.listingId == listingId
+          && r.receiverId == uid()
+          && r.status == 'PENDING'
+          && resource.data.status == 'AVAILABLE'
+          && request.time < resource.data.pickupDeadline
+          && newQty == resource.data.availableQuantity - r.quantity
+          && newQty >= 0
+          && request.resource.data.status == (newQty == 0 ? 'FULLY_RESERVED' : 'AVAILABLE');
+      }
+
+      // Release: the caller cancels their own active reservation in the same transaction,
+      // and exactly its quantity is returned.
+      function isRelease() {
+        let path = reservationPath(request.resource.data.lastReservationId);
+        let before = get(path).data;
+        let after = getAfter(path).data;
+        return before.listingId == listingId
+          && before.receiverId == uid()
+          && before.status in ['PENDING', 'CONFIRMED']
+          && after.status == 'CANCELLED'
+          && request.resource.data.availableQuantity == resource.data.availableQuantity + before.quantity
+          && request.resource.data.availableQuantity <= resource.data.totalQuantity
+          && request.resource.data.status ==
+               (resource.data.status == 'FULLY_RESERVED' ? 'AVAILABLE' : resource.data.status);
+      }
+
+      allow delete: if signedIn() && resource.data.providerId == uid();
+    }
+
+    // ---------- reservations/{reservationId} ---------------------------------------------
+
+    match /reservations/{resId} {
+
+      function isParty() {
+        return resource.data.receiverId == uid() || resource.data.providerId == uid();
+      }
+
+      // Role rules, mirrored by User#canReserve / #maxReservableQuantity in the app.
+      function roleAllows(u, type, qty) {
+        return (u.role == 'RECEIVER' && type in ['FREE', 'DISCOUNTED'] && qty <= 5)
+          || (u.role == 'CHARITY'
+              && (type == 'FREE' || (type == 'CHARITY' && u.verificationStatus == 'VERIFIED')));
+      }
+
+      allow read: if signedIn() && isParty();
+
+      allow create: if signedIn()
+        && request.resource.data.reservationId == resId
+        && request.resource.data.receiverId == uid()
+        && request.resource.data.status == 'PENDING'
+        && request.resource.data.quantity is int
+        && request.resource.data.quantity >= 1
+        && request.resource.data.confirmedAt == null
+        && request.resource.data.rejectedAt == null
+        && request.resource.data.cancelledAt == null
+        && request.resource.data.collectedAt == null
+        && request.resource.data.collectionConfirmedBy == null
+        && validAgainstListing(get(listingPath(request.resource.data.listingId)).data,
+                               getAfter(listingPath(request.resource.data.listingId)).data);
+
+      function validAgainstListing(before, after) {
+        let d = request.resource.data;
+        let unitPrice = before.distributionType == 'DISCOUNTED' ? before.discountedPrice : 0;
+        let u = me();
+        return after.lastReservationId == resId
+          && d.providerId == before.providerId
+          && d.providerId != uid()
+          && d.distributionType == before.distributionType
+          && math.abs(d.totalPrice - d.quantity * unitPrice) < 0.005
+          && d.receiverRole == u.role
+          && roleAllows(u, before.distributionType, d.quantity);
+      }
+
+      // Only status and its timestamp may change, along the state machine in ReservationStatus.
+      allow update: if signedIn()
+        && (providerTransition() || receiverTransition());
+
+      function transitions(from, target, keys) {
+        return resource.data.status in from
+          && request.resource.data.status == target
+          && onlyChanged(keys);
+      }
+
+      function providerTransition() {
+        return resource.data.providerId == uid() && (
+          (transitions(['PENDING'], 'CONFIRMED', ['status', 'confirmedAt']) && request.resource.data.confirmedAt is timestamp)
+          || (transitions(['PENDING'], 'REJECTED', ['status', 'rejectedAt']) && request.resource.data.rejectedAt is timestamp)
+          || (transitions(['CONFIRMED'], 'CANCELLED', ['status', 'cancelledAt']) && request.resource.data.cancelledAt is timestamp)
+          || (transitions(['CONFIRMED'], 'COLLECTED', ['status', 'collectedAt', 'collectionConfirmedBy'])
+              && request.resource.data.collectedAt is timestamp
+              && request.resource.data.collectionConfirmedBy == 'PROVIDER'));
+      }
+
+      function receiverTransition() {
+        let lp = listingPath(resource.data.listingId);
+        return resource.data.receiverId == uid() && (
+          (transitions(['PENDING', 'CONFIRMED'], 'CANCELLED', ['status', 'cancelledAt'])
+              && request.resource.data.cancelledAt is timestamp
+              // The stock must be returned in the same transaction (see isRelease above).
+              // lastReservationId alone is not enough: it may still point here from the reserve.
+              && (!exists(lp)
+                  || (getAfter(lp).data.lastReservationId == resId
+                      && getAfter(lp).data.availableQuantity == get(lp).data.availableQuantity + resource.data.quantity)))
+          || (transitions(['CONFIRMED'], 'COLLECTED', ['status', 'collectedAt', 'collectionConfirmedBy'])
+              && request.resource.data.collectedAt is timestamp
+              && request.resource.data.collectionConfirmedBy == 'RECEIVER'));
+      }
+
+      allow delete: if false;
+    }
+
+    // ---------- notifications/{notificationId} -------------------------------------------
+
+    match /notifications/{notificationId} {
+      allow read: if signedIn() && resource.data.recipientId == uid();
+
+      // A notification is only accepted alongside the reservation change it describes,
+      // between the two parties of that reservation.
+      allow create: if signedIn()
+        && request.resource.data.notificationId == notificationId
+        && request.resource.data.senderId == uid()
+        && request.resource.data.recipientId != uid()
+        && request.resource.data.isRead == false
+        && request.resource.data.createdAt == request.time
+        && str(request.resource.data.title, 1, 100)
+        && str(request.resource.data.message, 1, 500)
+        && request.resource.data.type in ['RESERVATION_REQUEST', 'RESERVATION_CONFIRMED', 'RESERVATION_REJECTED',
+                                         'RESERVATION_CANCELLED', 'COLLECTION_COMPLETED', 'LISTING_CANCELLED']
+        && betweenParties(getAfter(reservationPath(request.resource.data.relatedReservationId)).data);
+
+      function betweenParties(r) {
+        return r.listingId == request.resource.data.relatedListingId
+          && ((r.providerId == uid() && r.receiverId == request.resource.data.recipientId)
+              || (r.receiverId == uid() && r.providerId == request.resource.data.recipientId));
+      }
+
+      allow update: if signedIn() && resource.data.recipientId == uid()
+        && onlyChanged(['isRead']) && request.resource.data.isRead == true;
+
+      allow delete: if signedIn() && resource.data.recipientId == uid();
+    }
+  }
+}

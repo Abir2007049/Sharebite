@@ -1,0 +1,27 @@
+rules_version = '2';
+
+// ShareBite Firebase Storage rules. Paths mirror FirebaseImageStorage.java.
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isImageUnder5MB() {
+      return request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // Food photos: readable by signed-in users, writable only by the provider who owns the folder.
+    match /listing_images/{providerId}/{fileName} {
+      allow read: if request.auth != null;
+      allow create, update: if request.auth != null && request.auth.uid == providerId && isImageUnder5MB();
+      allow delete: if request.auth != null && request.auth.uid == providerId;
+    }
+
+    // Charity verification documents: private to the organisation and reviewers.
+    match /verification_documents/{organizationId}/{fileName} {
+      allow read: if request.auth != null
+        && (request.auth.uid == organizationId || request.auth.token.get('admin', false) == true);
+      allow create: if request.auth != null && request.auth.uid == organizationId && isImageUnder5MB();
+      allow update, delete: if false;
+    }
+  }
+}
