@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Non-checkable chip used as a shortcut (e.g. category entry points on the home screen). -->
+<com.google.android.material.chip.Chip xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.Material3.Chip.Assist"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textColor="@color/charcoal"
+    app:chipBackgroundColor="@color/white"
+    app:chipStrokeColor="@color/divider"
+    xmlns:app="http://schemas.android.com/apk/res-auto" />

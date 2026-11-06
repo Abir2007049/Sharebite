@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/food_card_compact_width"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="@dimen/space_s"
+    android:layout_marginEnd="@dimen/space_m"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/food_card_compact_image">
+
+            <ImageView
+                android:id="@+id/foodImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:scaleType="centerCrop"
+                android:src="@drawable/placeholder_food" />
+
+            <TextView
+                android:id="@+id/distributionBadge"
+                style="@style/ShareBite.Badge"
+                android:layout_gravity="top|start"
+                android:layout_margin="@dimen/space_s" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/space_m">
+
+            <TextView
+                android:id="@+id/foodTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.ShareBite.Title" />
+
+            <TextView
+                android:id="@+id/quantity"
+                style="@style/ShareBite.MetaRow"
+                android:layout_marginTop="@dimen/space_xs"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.ShareBite.Caption"
+                app:drawableStartCompat="@drawable/ic_restaurant" />
+
+            <TextView
+                android:id="@+id/timeLeft"
+                style="@style/ShareBite.Badge"
+                android:layout_marginTop="@dimen/space_s"
+                android:backgroundTint="@color/scrim_dark"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:textAppearance="@style/TextAppearance.ShareBite.Caption"
+                android:visibility="gone" />
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

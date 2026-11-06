@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- General -->
+    <string name="retry">Retry</string>
+    <string name="done">Done</string>
+    <string name="not_now">Not now</string>
+    <string name="close">Close</string>
+    <string name="edit">Edit</string>
+    <string name="remove">Remove</string>
+    <string name="manage">Manage</string>
+    <string name="enable">Enable</string>
+    <string name="search">Search</string>
+    <string name="optional">Optional</string>
+    <string name="zero">0</string>
+    <string name="minus_sign">−</string>
+    <string name="plus_sign">+</string>
+    <string name="see_all">See all</string>
+    <string name="saving">Saving…</string>
+    <string name="save_changes">Save changes</string>
+    <string name="call">Call</string>
+    <string name="map">Map</string>
+    <string name="directions">Directions</string>
+    <string name="version_format">ShareBite v%1$s</string>
+    <string name="error_fix_fields">Please fix the highlighted fields.</string>
+    <string name="no_data_yet">No data yet.</string>
+    <string name="no_maps_app">No maps app is installed to open directions.</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_explore">Explore</string>
+    <string name="nav_reservations">Reservations</string>
+    <string name="nav_collections">Collections</string>
+    <string name="nav_impact">Impact</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_listings">My listings</string>
+
+    <!-- Setup -->
+    <string name="setup_title">Connect a Firebase project</string>
+    <string name="setup_body">This build of ShareBite has no Firebase configuration, so it cannot sign you in or load food listings. ShareBite never fakes a backend: add your own Firebase project and rebuild.</string>
+    <string name="setup_steps">1. Create a Firebase project\n2. Add an Android app with package\n   com.sharebite.app\n3. Download google-services.json into\n   ShareBite/app/\n4. Enable Email/Password sign-in,\n   Cloud Firestore and Storage\n5. Deploy firestore.rules and\n   storage.rules (see README)\n6. Rebuild and reinstall the app</string>
+    <string name="close_app">Close app</string>
+
+    <!-- Welcome & auth -->
+    <string name="welcome_title">Good food deserves a second chance.</string>
+    <string name="welcome_subtitle">Reserve surplus meals, bakery items and groceries from places near you, then pick them up before they go to waste.</string>
+    <string name="welcome_feature_free">Free food shared by restaurants, bakeries, canteens and neighbours</string>
+    <string name="welcome_feature_discount">Discounted surplus food, paid directly at pickup</string>
+    <string name="welcome_feature_charity">Bulk donations for verified charity organisations</string>
+    <string name="get_started">Create an account</string>
+    <string name="have_account">I already have an account</string>
+    <string name="login_title">Welcome back</string>
+    <string name="login_subtitle">Log in to reserve or share surplus food.</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="log_in">Log in</string>
+    <string name="signing_in">Signing in…</string>
+    <string name="no_account_register">New to ShareBite? Create an account</string>
+    <string name="register_title">Create your account</string>
+    <string name="register_subtitle">Tell us how you will use ShareBite. You can\'t change the account type later.</string>
+    <string name="i_am_a">I am a…</string>
+    <string name="your_details">Your details</string>
+    <string name="full_name">Full name</string>
+    <string name="phone">Phone number</string>
+    <string name="phone_helper">Shared with the other party of a reservation so pickups can be coordinated.</string>
+    <string name="password_helper">At least 8 characters, with letters and numbers.</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="provider_type">Provider type</string>
+    <string name="organization_name">Organisation name</string>
+    <string name="business_name">Business name</string>
+    <string name="business_name_optional">Business name (optional for households)</string>
+    <string name="error_provider_type">Choose what kind of provider you are.</string>
+    <string name="charity_register_note">Charity accounts start as unverified. After registering, submit your organisation details from your profile; a reviewer verifies them before you can reserve charity-only donations.</string>
+    <string name="create_account">Create account</string>
+    <string name="creating_account">Creating account…</string>
+    <string name="register_terms">By creating an account you agree to share only food that is safe to eat and to collect reservations you make.</string>
+    <string name="have_account_login">Already registered? Log in</string>
+    <string name="reset_title">Reset your password</string>
+    <string name="reset_subtitle">Enter the email you registered with and we\'ll send you a link to choose a new password.</string>
+    <string name="send_reset_link">Send reset link</string>
+    <string name="reset_sent_message">If an account exists for %1$s, a password reset link is on its way. Check your inbox and spam folder.</string>
+    <string name="back_to_login">Back to log in</string>
+
+    <!-- Header / home -->
+    <string name="greeting">Hi, %1$s</string>
+    <string name="home_subtitle_receiver">Rescue good food near you today.</string>
+    <string name="home_subtitle_charity">Collect surplus food for your community.</string>
+    <string name="notifications">Notifications</string>
+    <string name="notifications_with_count">Notifications, %1$d unread</string>
+    <string name="notifications_unread">Notifications (%1$d unread)</string>
+    <string name="search_hint">Search food, e.g. bread, rice, curry</string>
+    <string name="location_prompt">Share your location to see what\'s nearby and how far it is.</string>
+    <string name="location_permission_denied">Location permission was not granted.</string>
+    <string name="location_unavailable">Couldn\'t get your location. Is location turned on?</string>
+    <string name="hero_subtitle_default">Reserve now and collect before the deadline.</string>
+    <string name="section_nearby">Near you</string>
+    <string name="section_recent">Recently added</string>
+    <string name="section_free">Free food</string>
+    <string name="section_discounted">Discounted</string>
+    <string name="section_charity">Charity donations</string>
+    <string name="empty_nearby">Nothing available within 10 km right now.</string>
+    <string name="empty_recent">No food is listed right now. New listings appear here as soon as providers share them.</string>
+    <string name="empty_free">No free food listed at the moment.</string>
+    <string name="empty_discounted">No discounted food listed at the moment.</string>
+    <string name="empty_charity">No charity donations listed at the moment.</string>
+    <string name="verify_organisation">Verify organisation</string>
+    <string name="verification_banner_unverified">Your organisation isn\'t verified yet. Submit your details to reserve charity-only donations. You can already reserve free food.</string>
+    <string name="verification_banner_pending">Your verification is being reviewed. Charity-only donations unlock once it\'s approved.</string>
+    <string name="verification_banner_rejected">Your verification was declined. Review the reviewer\'s note and resubmit your details.</string>
+    <string name="stat_active_collections">Active reservations</string>
+    <string name="stat_completed_collections">Completed collections</string>
+
+    <!-- Provider dashboard -->
+    <string name="dashboard_subtitle">Here\'s what\'s happening with your food.</string>
+    <string name="dashboard_hero_title">Have surplus food?</string>
+    <string name="dashboard_hero_subtitle">List it in a minute. Nearby people and charities can reserve it for pickup.</string>
+    <string name="share_food">Share food</string>
+    <string name="stat_active_listings">Active listings</string>
+    <string name="stat_quantity_shared">Units shared (collected)</string>
+    <string name="stat_pending_requests">Pending requests</string>
+    <string name="stat_completed_pickups">Completed pickups</string>
+    <string name="pending_requests">Pending requests</string>
+    <string name="recent_activity">Recent activity</string>
+    <string name="empty_pending_provider">No requests waiting for you. New reservation requests appear here.</string>
+    <string name="empty_recent_activity">Confirmed, collected and cancelled reservations will appear here.</string>
+
+    <!-- Explore & cards -->
+    <string name="explore_title">Explore</string>
+    <string name="explore_subtitle">Everything available to reserve right now.</string>
+    <string name="all_types">All types</string>
+    <string name="sort_newest">Newest</string>
+    <string name="sort_ending_soon">Ending soon</string>
+    <string name="sort_nearest">Nearest</string>
+    <string name="empty_explore_title">No food available right now</string>
+    <string name="empty_explore_message">Check back later. Providers often list surplus food towards the end of the day.</string>
+    <string name="empty_explore_filtered_title">No matches</string>
+    <string name="empty_explore_filtered_message">Try a different search or remove some filters.</string>
+    <string name="clear_filters">Clear filters</string>
+    <string name="left_format">%1$s left</string>
+    <string name="provider_category_format">%1$s · %2$s</string>
+    <string name="contains_format">Contains: %1$s</string>
+    <string name="price_free">Free</string>
+    <string name="price_charity">Donation</string>
+    <string name="charity_only_note">Reserved for verified charity organisations</string>
+
+    <!-- Map -->
+    <string name="map_title">Food on the map</string>
+    <string name="map_empty">No available listings have a map location yet.</string>
+    <string name="map_card_meta">%1$s · %2$s</string>
+    <string name="view_details">View details</string>
+    <string name="you_are_here">You are here</string>
+    <string name="pickup_location">Pickup location</string>
+    <string name="search_address">Search address</string>
+    <string name="geocoding_attribution">Address search by OpenStreetMap Nominatim</string>
+    <string name="use_my_location">Use my location</string>
+    <string name="tap_to_pin">Tap the map to place the pickup pin</string>
+    <string name="selected_location">Selected location</string>
+    <string name="no_address_yet">No address found yet. You can type it on the previous screen.</string>
+    <string name="use_this_location">Use this location</string>
+    <string name="choose_address">Choose the matching address</string>
+
+    <!-- Listing editor -->
+    <string name="new_listing">Share surplus food</string>
+    <string name="edit_listing">Edit listing</string>
+    <string name="publish_listing">Publish listing</string>
+    <string name="add_photo">Add a photo</string>
+    <string name="add_photo_hint">A clear photo helps people decide quickly</string>
+    <string name="change_photo">Change photo</string>
+    <string name="food_photo">Food photo</string>
+    <string name="reserved_note">%1$s already reserved. The quantity can\'t go below this and the distribution type is locked.</string>
+    <string name="section_about_food">About the food</string>
+    <string name="food_title">Title</string>
+    <string name="food_description">Description</string>
+    <string name="category">Category</string>
+    <string name="quantity">Quantity</string>
+    <string name="unit">Unit</string>
+    <string name="section_distribution">How will you share it?</string>
+    <string name="original_price">Original price</string>
+    <string name="discounted_price">Discounted price</string>
+    <string name="section_timing">Timing</string>
+    <string name="preparation_time">Prepared on</string>
+    <string name="preparation_helper">When the food was cooked, baked or packed</string>
+    <string name="pickup_start">Pickup from</string>
+    <string name="pickup_deadline">Pickup deadline</string>
+    <string name="deadline_helper">Reservations close automatically at this time</string>
+    <string name="section_location">Pickup location</string>
+    <string name="pickup_address">Pickup address</string>
+    <string name="pick_on_map">Pin on map</string>
+    <string name="change_pin">Change map pin</string>
+    <string name="pin_not_set">No map pin. The address is still shown, but distance and map view won\'t be available.</string>
+    <string name="pin_set_format">Map pin set (%1$s). Receivers will see the distance.</string>
+    <string name="section_food_safety">Food safety</string>
+    <string name="storage_information">Storage conditions</string>
+    <string name="storage_helper">e.g. Refrigerated at 4°C since preparation</string>
+    <string name="allergens">Allergens</string>
+    <string name="allergen_helper">e.g. Gluten, milk, eggs, nuts. Enter \"None\" if there are none.</string>
+    <string name="food_safety_notes">Other safety notes</string>
+    <string name="safety_declaration">I confirm this food is fit for human consumption, has been stored safely, and the information above is accurate.</string>
+    <string name="safety_disclaimer">ShareBite does not inspect or certify food. Providers are responsible for the safety of what they share.</string>
+    <string name="discard_title">Discard changes?</string>
+    <string name="discard_message">Your changes to this listing will be lost.</string>
+    <string name="keep_editing">Keep editing</string>
+    <string name="discard">Discard</string>
+
+    <!-- Listing detail -->
+    <string name="listing_details">Listing</string>
+    <string name="listing_unavailable_title">Listing unavailable</string>
+    <string name="price_each">%1$s each</string>
+    <string name="percent_off">%1$d%% off</string>
+    <string name="price_free_long">Free</string>
+    <string name="price_charity_long">Charity donation</string>
+    <string name="allergen_warning_title">Allergen warning</string>
+    <string name="available_of_total">%1$s left of %2$d</string>
+    <string name="pickup_window">%1$s – %2$s</string>
+    <string name="call_provider">Call provider</string>
+    <string name="prepared_at">Prepared %1$s</string>
+    <string name="storage_line">Storage: %1$s</string>
+    <string name="allergens_line">Allergens: %1$s</string>
+    <string name="consumer_safety_disclaimer">Information is provided by the provider; ShareBite does not inspect food. Check the food when you collect it, and don\'t eat anything that looks, smells or tastes off.</string>
+    <string name="weather_loading">Checking weather at the pickup point…</string>
+    <string name="weather_unavailable">Weather information unavailable</string>
+    <string name="weather_summary">%1$s · %2$s near pickup</string>
+    <string name="weather_attribution">Weather data by Open-Meteo.com</string>
+    <string name="reservations_for_listing">Reservations for this listing</string>
+    <string name="no_reservations_for_listing">No reservations yet.</string>
+    <string name="reserve">Reserve</string>
+    <string name="blocker_expired">The pickup deadline has passed, so this listing can no longer be reserved.</string>
+    <string name="blocker_unavailable">This listing is fully reserved or no longer available.</string>
+    <string name="blocker_verification_required">Verify your organisation to reserve charity donations.</string>
+    <string name="blocker_verification_pending">Your verification is under review. Charity donations unlock once approved.</string>
+    <string name="blocker_charity_only">Only verified charity organisations can reserve this donation.</string>
+    <string name="blocker_discount_charity">Charity accounts collect donations; discounted food is for individual receivers.</string>
+    <string name="blocker_role">Your account type can\'t reserve food.</string>
+    <string name="owner_expired_note">The pickup deadline has passed. Close or withdraw the listing from Manage.</string>
+    <string name="manage_listing">Manage listing</string>
+    <string name="mark_listing_completed">Mark as completed</string>
+    <string name="withdraw_listing">Withdraw listing</string>
+    <string name="delete_listing">Delete listing</string>
+    <string name="complete_title">Close this listing?</string>
+    <string name="complete_message">Use this once all reservations have been collected or resolved. The listing will no longer be shown to others.</string>
+    <string name="withdraw_title">Withdraw this listing?</string>
+    <string name="withdraw_message">The listing will be removed from Explore. Pending requests will be declined and confirmed reservations cancelled; those people will be notified.</string>
+    <string name="delete_title">Delete permanently?</string>
+    <string name="delete_message">Only listings that were never reserved can be deleted. This can\'t be undone.</string>
+    <string name="reserved_title">Reservation requested</string>
+    <string name="reserved_message">You requested %1$s from %2$s. You\'ll be notified when it\'s confirmed. Please collect it before %3$s.</string>
+    <string name="view_reservation">View reservation</string>
+
+    <!-- Reserve sheet -->
+    <string name="reserve_food">Reserve food</string>
+    <string name="decrease_quantity">Decrease quantity</string>
+    <string name="increase_quantity">Increase quantity</string>
+    <string name="max_per_reservation">You can reserve up to %1$s at a time.</string>
+    <string name="available_now">%1$s available</string>
+    <string name="collect_by">Collect by %1$s at %2$s</string>
+    <string name="allergen_acknowledge">I have read the allergen information (contains: %1$s)</string>
+    <string name="confirm_reservation">Confirm reservation</string>
+    <string name="reserve_footer">Only reserve what you will collect. The provider confirms your request.</string>
+    <string name="total_pay_at_pickup">Total %1$s · pay the provider at pickup</string>
+    <string name="total_free">Free of charge</string>
+    <string name="total_charity">Charity donation · free of charge</string>
+
+    <!-- My listings -->
+    <string name="my_listings_title">My listings</string>
+    <string name="my_listings_subtitle">Track stock and manage what you\'ve shared.</string>
+    <string name="filter_active">Active</string>
+    <string name="filter_past">Past</string>
+    <string name="stock_format">%1$d of %2$s reserved</string>
+    <string name="deadline_was">Deadline was %1$s</string>
+    <string name="empty_active_listings_title">No active listings</string>
+    <string name="empty_active_listings_message">Share surplus food and it will appear here while it\'s available.</string>
+    <string name="empty_past_listings_title">No past listings</string>
+    <string name="empty_past_listings_message">Completed, expired and withdrawn listings will appear here.</string>
+
+    <!-- Reservations -->
+    <string name="reservations_title_provider">Reservations</string>
+    <string name="reservations_title_receiver">My reservations</string>
+    <string name="reservations_title_charity">Collections</string>
+    <string name="reservations_subtitle_provider">Confirm requests and record pickups.</string>
+    <string name="reservations_subtitle_consumer">Track your requests and pickups.</string>
+    <string name="filter_requests">Requests</string>
+    <string name="filter_pending">Pending</string>
+    <string name="filter_confirmed">Confirmed</string>
+    <string name="filter_history">History</string>
+    <string name="empty_reservations_title">Nothing here yet</string>
+    <string name="empty_reservations_provider">Reservation requests for your listings will show up here.</string>
+    <string name="empty_reservations_consumer">Find food you\'d like to collect and reserve it.</string>
+    <string name="empty_history_message">Collected, declined and cancelled reservations will show up here.</string>
+    <string name="find_food">Find food</string>
+    <string name="counterpart_provider">From %1$s</string>
+    <string name="counterpart_receiver">Requested by %1$s</string>
+    <string name="counterpart_charity">Requested by %1$s (charity)</string>
+    <string name="quantity_price_format">%1$s · %2$s</string>
+    <string name="pickup_by">Pickup by %1$s</string>
+    <string name="collected_on">Collected %1$s</string>
+    <string name="cancelled_on">Cancelled %1$s</string>
+    <string name="declined_on">Declined %1$s</string>
+    <string name="action_confirm">Confirm</string>
+    <string name="action_decline">Decline</string>
+    <string name="action_mark_collected">Mark collected</string>
+    <string name="action_confirm_pickup">I\'ve collected it</string>
+    <string name="action_cancel_reservation">Cancel</string>
+    <string name="dialog_confirm_title">Confirm this reservation?</string>
+    <string name="dialog_confirm_message">The collector will be notified and asked to pick up the food before the deadline.</string>
+    <string name="dialog_decline_title">Decline this request?</string>
+    <string name="dialog_decline_message">The reserved quantity becomes available to others again and the requester is notified.</string>
+    <string name="dialog_collect_title">Confirm the hand-over?</string>
+    <string name="dialog_collect_message_provider">Only do this once the collector has picked up the food. Collected reservations count towards impact statistics.</string>
+    <string name="dialog_collect_message_receiver">Only do this once you have the food. The provider will be notified.</string>
+    <string name="dialog_cancel_title">Cancel this reservation?</string>
+    <string name="dialog_cancel_message_receiver">The quantity is released for others and the provider is notified.</string>
+    <string name="dialog_cancel_message_provider">Use this if the food can no longer be provided or the collector didn\'t show up. The collector is notified.</string>
+    <string name="result_confirmed">Reservation confirmed.</string>
+    <string name="result_declined">Request declined.</string>
+    <string name="result_collected">Marked as collected. Thank you for rescuing food!</string>
+    <string name="result_cancelled">Reservation cancelled.</string>
+    <string name="reservation_details">Reservation</string>
+    <string name="collector">Collector</string>
+    <string name="provider">Provider</string>
+    <string name="view_listing">View listing</string>
+    <string name="explain_pending_provider">Waiting for you to confirm or decline this request.</string>
+    <string name="explain_pending_consumer">Waiting for the provider to confirm your request.</string>
+    <string name="explain_confirmed_provider">Confirmed. Mark it as collected when the collector picks up the food.</string>
+    <string name="explain_confirmed_consumer">Confirmed! Collect the food at the pickup address before the deadline.</string>
+    <string name="explain_collected">Collected. This food was rescued.</string>
+    <string name="explain_rejected">The provider declined this request.</string>
+    <string name="explain_cancelled">This reservation was cancelled.</string>
+    <string name="timeline_requested">Requested</string>
+    <string name="timeline_confirmed">Confirmed</string>
+    <string name="timeline_declined">Declined</string>
+    <string name="timeline_cancelled">Cancelled</string>
+    <string name="timeline_collected">Collected</string>
+    <string name="timeline_collected_receiver">Collected (confirmed by collector)</string>
+    <string name="timeline_waiting">Waiting</string>
+
+    <!-- Impact -->
+    <string name="impact_title">Impact</string>
+    <string name="impact_subtitle_provider">The food you\'ve shared that was collected.</string>
+    <string name="impact_subtitle_consumer">The food you\'ve rescued.</string>
+    <string name="impact_hero_provider">units of food shared</string>
+    <string name="impact_hero_consumer">units of food rescued</string>
+    <string name="impact_hero_caption">Counted from completed collections only</string>
+    <string name="impact_empty_provider">Your impact appears here once a reservation of your food is marked as collected.</string>
+    <string name="impact_empty_consumer">Your impact appears here once you collect your first reservation.</string>
+    <string name="stat_charity_donations">Charity collections</string>
+    <string name="stat_charity_collections">Charity donations collected</string>
+    <string name="stat_people_helped">People and charities helped</string>
+    <string name="stat_providers_supported">Providers you rescued from</string>
+    <string name="monthly_activity">Monthly activity</string>
+    <string name="monthly_activity_caption">Units collected per month, last 6 months</string>
+    <string name="by_category">By category</string>
+    <string name="impact_methodology">How we count: a unit is one portion, piece, box, pack, kilogram or litre as listed by the provider, counted only when a reservation is marked collected. ShareBite does not estimate emissions or other environmental savings, because it has no reliable data to do so.</string>
+
+    <!-- Profile -->
+    <string name="profile_title">Profile</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="edit_profile_note">Your email address and account type can\'t be changed here.</string>
+    <string name="charity_verification">Charity verification</string>
+    <string name="food_safety_guidelines">Food safety guidelines</string>
+    <string name="food_safety_guidelines_body">• Only share food that is fit for human consumption and within its safe-to-eat window.\n\n• Keep perishable food chilled (at or below 5°C) or hot (at or above 60°C) until pickup.\n\n• Declare all allergens. If in doubt, list it.\n\n• Never share food that is spoiled, past its use-by date, or has been left at room temperature for long periods.\n\n• Collectors: inspect food at pickup, transport it promptly, and refrigerate perishables as soon as possible.\n\nShareBite connects people but does not inspect or certify food. Follow your local food safety regulations.</string>
+    <string name="log_out">Log out</string>
+    <string name="log_out_title">Log out?</string>
+    <string name="log_out_message">You\'ll need to log in again to reserve or share food.</string>
+
+    <!-- Charity verification -->
+    <string name="verification_status_unverified">Submit your organisation\'s details for review. Verification is required to reserve charity-only donations.</string>
+    <string name="verification_status_pending">Thanks! Your submission is being reviewed. You\'ll see the result here.</string>
+    <string name="verification_status_verified">Your organisation is verified. You can reserve charity donations in bulk.</string>
+    <string name="verification_status_rejected">Your submission was declined. Update your details and submit again.</string>
+    <string name="submitted_on">Submitted %1$s</string>
+    <string name="reviewer_note">Reviewer note: %1$s</string>
+    <string name="organisation_details">Organisation details</string>
+    <string name="verification_intro">A reviewer checks these details against public registers. Verification can take a few days.</string>
+    <string name="registration_number">Registration number</string>
+    <string name="registration_helper">Your charity or NGO registration number</string>
+    <string name="contact_person">Contact person</string>
+    <string name="organisation_address">Organisation address</string>
+    <string name="organisation_description">What does your organisation do?</string>
+    <string name="organisation_description_helper">Who you serve and how you distribute food</string>
+    <string name="supporting_document">Supporting document (optional)</string>
+    <string name="attach_document">Attach a photo of your registration certificate</string>
+    <string name="replace_document">Replace document photo</string>
+    <string name="submit_for_verification">Submit for verification</string>
+    <string name="verification_submitted_title">Submitted for review</string>
+    <string name="verification_submitted_message">Your organisation\'s status is now \"Verification pending\". You can keep reserving free food in the meantime.</string>
+
+    <!-- Notifications -->
+    <string name="mark_all_read">Mark all read</string>
+    <string name="empty_notifications_title">No notifications</string>
+    <string name="empty_notifications_message">Updates about your reservations will appear here.</string>
+
+    <plurals name="listings_available">
+        <item quantity="one">%d listing available</item>
+        <item quantity="other">%d listings available</item>
+    </plurals>
+    <plurals name="ending_soon">
+        <item quantity="one">%d ends within the hour</item>
+        <item quantity="other">%d end within the hour</item>
+    </plurals>
+    <plurals name="results_count">
+        <item quantity="one">%d result</item>
+        <item quantity="other">%d results</item>
+    </plurals>
+</resources>

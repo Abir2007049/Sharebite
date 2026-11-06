@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cream">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/space_xxl">
+
+        <include
+            android:id="@+id/header"
+            layout="@layout/view_screen_header" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/screen_padding"
+            android:layout_marginTop="@dimen/space_s"
+            android:background="@drawable/bg_hero"
+            android:orientation="vertical"
+            android:padding="@dimen/space_xl">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dashboard_hero_title"
+                android:textAppearance="@style/TextAppearance.ShareBite.Headline"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:text="@string/dashboard_hero_subtitle"
+                android:textAppearance="@style/TextAppearance.ShareBite.Body"
+                android:textColor="@color/soft_green" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/shareFoodButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_l"
+                android:backgroundTint="@color/white"
+                android:text="@string/share_food"
+                android:textColor="@color/forest_green"
+                app:icon="@drawable/ic_add"
+                app:iconTint="@color/forest_green" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/screen_padding"
+            android:layout_marginTop="@dimen/space_l"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <include
+                android:id="@+id/statActive"
+                layout="@layout/view_stat_card" />
+
+            <Space
+                android:layout_width="@dimen/space_m"
+                android:layout_height="1dp" />
+
+            <include
+                android:id="@+id/statShared"
+                layout="@layout/view_stat_card" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/screen_padding"
+            android:layout_marginTop="@dimen/space_m"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <include
+                android:id="@+id/statPending"
+                layout="@layout/view_stat_card" />
+
+            <Space
+                android:layout_width="@dimen/space_m"
+                android:layout_height="1dp" />
+
+            <include
+                android:id="@+id/statCompleted"
+                layout="@layout/view_stat_card" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_xl"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/screen_padding"
+            android:paddingEnd="@dimen/space_s">
+
+            <TextView
+                style="@style/ShareBite.SectionHeader"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/pending_requests" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/seeAllPending"
+                style="@style/Widget.ShareBite.Button.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/see_all" />
+        </LinearLayout>
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/screen_padding"
+            android:indeterminate="true" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/pendingList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false" />
+
+        <TextView
+            android:id="@+id/pendingEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/screen_padding"
+            android:layout_marginTop="@dimen/space_s"
+            android:background="@drawable/bg_rounded_panel"
+            android:padding="@dimen/space_l"
+            android:text="@string/empty_pending_provider"
+            android:textAppearance="@style/TextAppearance.ShareBite.Body"
+            android:visibility="gone" />
+
+        <TextView
+            style="@style/ShareBite.SectionHeader"
+            android:layout_marginTop="@dimen/space_xl"
+            android:paddingHorizontal="@dimen/screen_padding"
+            android:text="@string/recent_activity" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recentList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_xs"
+            android:nestedScrollingEnabled="false" />
+
+        <TextView
+            android:id="@+id/recentEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/screen_padding"
+            android:layout_marginTop="@dimen/space_s"
+            android:background="@drawable/bg_rounded_panel"
+            android:padding="@dimen/space_l"
+            android:text="@string/empty_recent_activity"
+            android:textAppearance="@style/TextAppearance.ShareBite.Body"
+            android:visibility="gone" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

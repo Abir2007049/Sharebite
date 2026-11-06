@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cream">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/space_xxl">
+
+        <include
+            android:id="@+id/header"
+            layout="@layout/view_screen_header" />
+
+        <!-- Search entry point: opens the Explore tab. -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/searchBar"
+            style="@style/Widget.ShareBite.Card.Outlined"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginHorizontal="@dimen/screen_padding"
+            android:layout_marginTop="@dimen/space_s"
+            android:clickable="true"
+            android:contentDescription="@string/search_hint"
+            android:focusable="true">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawablePadding="@dimen/space_m"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/space_l"
+                android:text="@string/search_hint"
+                android:textAppearance="@style/TextAppearance.ShareBite.Body"
+                android:textColor="@color/charcoal_hint"
+                app:drawableStartCompat="@drawable/ic_search"
+                app:drawableTint="@color/charcoal_secondary" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Charity only: verification status. -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/verificationBanner"
+            style="@style/Widget.ShareBite.Card.Outlined"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/screen_padding"
+            android:layout_marginTop="@dimen/space_l"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/space_l">
+
+                <TextView
+                    android:id="@+id/verificationBadge"
+                    style="@style/ShareBite.Badge" />
+
+                <TextView
+                    android:id="@+id/verificationMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_s"
+                    android:textAppearance="@style/TextAppearance.ShareBite.Body" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/verificationButton"
+                    style="@style/Widget.ShareBite.Button.Tonal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_m"
+                    android:text="@string/verify_organisation"
+                    app:icon="@drawable/ic_shield" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Charity only: collection stats. -->
+        <LinearLayout
+            android:id="@+id/statsRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/screen_padding"
+            android:layout_marginTop="@dimen/space_l"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <include
+                android:id="@+id/statPending"
+                layout="@layout/view_stat_card" />
+
+            <Space
+                android:layout_width="@dimen/space_m"
+                android:layout_height="1dp" />
+
+            <include
+                android:id="@+id/statCompleted"
+                layout="@layout/view_stat_card" />
+        </LinearLayout>
+
+        <!-- Availability summary. -->
+        <LinearLayout
+            android:id="@+id/heroCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/screen_padding"
+            android:layout_marginTop="@dimen/space_l"
+            android:background="@drawable/bg_hero"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/space_l">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/heroTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.ShareBite.Headline"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/heroSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_xxs"
+                    android:textAppearance="@style/TextAppearance.ShareBite.Body"
+                    android:textColor="@color/soft_green" />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mapButton"
+                style="@style/Widget.ShareBite.Button.Tonal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/map"
+                app:icon="@drawable/ic_map" />
+        </LinearLayout>
+
+        <!-- Shown until the user shares their location. -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/locationCard"
+            style="@style/Widget.ShareBite.Card.Outlined"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/screen_padding"
+            android:layout_marginTop="@dimen/space_m">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/space_m">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_icon_circle"
+                    android:contentDescription="@null"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_my_location"
+                    app:tint="@color/forest_green" />
+
+                <TextView
+                    android:id="@+id/locationMessage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/space_m"
+                    android:layout_weight="1"
+                    android:text="@string/location_prompt"
+                    android:textAppearance="@style/TextAppearance.ShareBite.Body" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/locationButton"
+                    style="@style/Widget.ShareBite.Button.Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/enable" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_m"
+            android:clipToPadding="false"
+            android:paddingHorizontal="@dimen/screen_padding"
+            android:scrollbars="none">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/categoryChips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleLine="true" />
+        </HorizontalScrollView>
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/space_xxl"
+            android:indeterminate="true" />
+
+        <TextView
+            android:id="@+id/errorText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/screen_padding"
+            android:layout_marginTop="@dimen/space_l"
+            android:background="@drawable/bg_rounded_panel"
+            android:backgroundTint="@color/error_bg"
+            android:padding="@dimen/space_l"
+            android:textAppearance="@style/TextAppearance.ShareBite.Body"
+            android:textColor="@color/error_red"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/sectionCharity"
+            layout="@layout/view_listing_section"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/sectionNearby"
+            layout="@layout/view_listing_section"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/sectionRecent"
+            layout="@layout/view_listing_section" />
+
+        <include
+            android:id="@+id/sectionFree"
+            layout="@layout/view_listing_section" />
+
+        <include
+            android:id="@+id/sectionDiscounted"
+            layout="@layout/view_listing_section"
+            android:visibility="gone" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Namespace root: "ShareBite.X" styles implicitly inherit from this. -->
+    <style name="ShareBite" />
+
+    <style name="ShareBite.WelcomeFeature">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/space_m</item>
+        <item name="android:drawablePadding">@dimen/space_m</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">@dimen/touch_target</item>
+        <item name="android:textAppearance">@style/TextAppearance.ShareBite.Body</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="drawableTint">@color/soft_green</item>
+    </style>
+
+    <!-- Selectable role card used on the registration screen. -->
+    <style name="Widget.ShareBite.Card.Selectable" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardBackgroundColor">@color/white</item>
+        <item name="strokeColor">@color/selectable_card_stroke</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="checkedIconTint">@color/forest_green</item>
+        <item name="android:checkable">true</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.ShareBite.Medium</item>
+    </style>
+
+    <!-- Pill badge (status / distribution type). Colours are applied by ViewUtils. -->
+    <style name="ShareBite.Badge">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/bg_pill</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.ShareBite.Badge</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <!-- Icon + text row used for metadata (pickup time, address, quantity...). -->
+    <style name="ShareBite.MetaRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:drawablePadding">@dimen/space_s</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textAppearance">@style/TextAppearance.ShareBite.Body</item>
+        <item name="drawableTint">@color/leaf_green</item>
+    </style>
+
+    <style name="ShareBite.SectionHeader">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.ShareBite.SectionTitle</item>
+    </style>
+
+    <style name="ShareBite.FieldLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/space_l</item>
+        <item name="android:layout_marginBottom">@dimen/space_xs</item>
+        <item name="android:textAppearance">@style/TextAppearance.ShareBite.Label</item>
+    </style>
+
+    <!-- Read-only text field that opens a date/time picker when tapped. -->
+    <style name="ShareBite.PickerField">
+        <item name="android:focusable">false</item>
+        <item name="android:clickable">true</item>
+        <item name="android:cursorVisible">false</item>
+        <item name="android:inputType">none</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <!-- Tappable row in the profile menu. -->
+    <style name="ShareBite.MenuRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:drawablePadding">@dimen/space_l</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">@dimen/space_l</item>
+        <item name="android:paddingEnd">@dimen/space_l</item>
+        <item name="android:textAppearance">@style/TextAppearance.ShareBite.BodyLarge</item>
+        <item name="drawableTint">@color/forest_green</item>
+        <item name="drawableEndCompat">@drawable/ic_chevron_right</item>
+    </style>
+
+    <style name="ShareBite.FormSection">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/space_xl</item>
+        <item name="android:textAppearance">@style/TextAppearance.ShareBite.Title</item>
+        <item name="android:textColor">@color/forest_green</item>
+    </style>
+</resources>
