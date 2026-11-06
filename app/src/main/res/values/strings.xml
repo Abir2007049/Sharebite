@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ShareBite</string>
+    <string name="tagline">Rescue Food. Share Goodness. Reduce Waste.</string>
+
+    <!-- Roles -->
+    <string name="role_provider">Food provider</string>
+    <string name="role_provider_desc">Restaurants, bakeries, canteens and households sharing surplus food</string>
+    <string name="role_receiver">Food receiver</string>
+    <string name="role_receiver_desc">Find free or discounted food near you</string>
+    <string name="role_charity">Charity organisation</string>
+    <string name="role_charity_desc">Collect donations in bulk for your community (verification required)</string>
+
+    <string name="provider_type_restaurant">Restaurant</string>
+    <string name="provider_type_bakery">Bakery</string>
+    <string name="provider_type_canteen">Campus canteen</string>
+    <string name="provider_type_household">Household</string>
+    <string name="provider_type_other">Other business</string>
+
+    <string name="verification_not_required">Not required</string>
+    <string name="verification_unverified">Not verified</string>
+    <string name="verification_pending">Verification pending</string>
+    <string name="verification_verified">Verified organisation</string>
+    <string name="verification_rejected">Verification declined</string>
+
+    <!-- Categories -->
+    <string name="category_all">All</string>
+    <string name="category_cooked_meals">Cooked meals</string>
+    <string name="category_bakery">Bakery</string>
+    <string name="category_fruits">Fruits</string>
+    <string name="category_vegetables">Vegetables</string>
+    <string name="category_dairy">Dairy</string>
+    <string name="category_packaged">Packaged food</string>
+    <string name="category_other">Other</string>
+
+    <!-- Distribution -->
+    <string name="distribution_free">Free</string>
+    <string name="distribution_free_desc">Give the food away at no cost</string>
+    <string name="distribution_discounted">Discounted</string>
+    <string name="distribution_discounted_desc">Sell surplus food at a reduced price, paid at pickup</string>
+    <string name="distribution_charity">Charity</string>
+    <string name="distribution_charity_desc">Reserved for verified charity organisations</string>
+
+    <!-- Statuses -->
+    <string name="listing_status_available">Available</string>
+    <string name="listing_status_fully_reserved">Fully reserved</string>
+    <string name="listing_status_expired">Expired</string>
+    <string name="listing_status_completed">Completed</string>
+    <string name="listing_status_cancelled">Withdrawn</string>
+
+    <string name="reservation_status_pending">Pending</string>
+    <string name="reservation_status_confirmed">Confirmed</string>
+    <string name="reservation_status_rejected">Declined</string>
+    <string name="reservation_status_cancelled">Cancelled</string>
+    <string name="reservation_status_collected">Collected</string>
+
+    <!-- Units -->
+    <string name="unit_portions">Portions</string>
+    <string name="unit_pieces">Pieces</string>
+    <string name="unit_boxes">Boxes</string>
+    <string name="unit_packs">Packs</string>
+    <string name="unit_kg">Kilograms</string>
+    <string name="unit_litres">Litres</string>
+    <plurals name="unit_portions">
+        <item quantity="one">%d portion</item>
+        <item quantity="other">%d portions</item>
+    </plurals>
+    <plurals name="unit_pieces">
+        <item quantity="one">%d piece</item>
+        <item quantity="other">%d pieces</item>
+    </plurals>
+    <plurals name="unit_boxes">
+        <item quantity="one">%d box</item>
+        <item quantity="other">%d boxes</item>
+    </plurals>
+    <plurals name="unit_packs">
+        <item quantity="one">%d pack</item>
+        <item quantity="other">%d packs</item>
+    </plurals>
+    <plurals name="unit_kg">
+        <item quantity="one">%d kg</item>
+        <item quantity="other">%d kg</item>
+    </plurals>
+    <plurals name="unit_litres">
+        <item quantity="one">%d litre</item>
+        <item quantity="other">%d litres</item>
+    </plurals>
+
+    <!-- Formatting -->
+    <string name="distance_m">%d m away</string>
+    <string name="distance_km_decimal">%.1f km away</string>
+    <string name="distance_km">%d km away</string>
+    <string name="today_at">Today, %s</string>
+    <string name="tomorrow_at">Tomorrow, %s</string>
+    <string name="yesterday_at">Yesterday, %s</string>
+    <string name="time_left_ended">Pickup closed</string>
+    <string name="time_left_minutes">Ends in %d min</string>
+    <string name="time_left_hours">Ends in %1$dh %2$dm</string>
+    <string name="time_left_days">Ends in %d days</string>
+</resources>

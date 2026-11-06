@@ -1,0 +1,27 @@
+# Gradle / Android Studio
+.gradle/
+build/
+/local.properties
+.idea/
+*.iml
+.DS_Store
+/captures
+.externalNativeBuild
+.cxx
+.kotlin/
+
+# Secrets and developer-specific Firebase configuration — never commit these
+google-services.json
+GoogleService-Info.plist
+*.keystore
+*.jks
+service-account*.json
+.env
+secrets.properties
+
+# Firebase CLI / emulator artefacts
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+node_modules/

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.ShareBite" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/forest_green</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/soft_green</item>
+        <item name="colorOnPrimaryContainer">@color/forest_green_dark</item>
+        <item name="colorSecondary">@color/leaf_green</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/mint_container</item>
+        <item name="colorOnSecondaryContainer">@color/forest_green_dark</item>
+        <item name="colorTertiary">@color/discount_amber</item>
+        <item name="colorError">@color/error_red</item>
+        <item name="android:colorBackground">@color/cream</item>
+        <item name="colorOnBackground">@color/charcoal</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/charcoal</item>
+        <item name="colorSurfaceVariant">@color/cream_dark</item>
+        <item name="colorOnSurfaceVariant">@color/charcoal_secondary</item>
+        <item name="colorSurfaceContainer">@color/white</item>
+        <item name="colorSurfaceContainerLow">@color/white</item>
+        <item name="colorSurfaceContainerHigh">@color/white</item>
+        <item name="colorOutline">@color/charcoal_hint</item>
+        <item name="colorOutlineVariant">@color/divider</item>
+
+        <item name="android:statusBarColor">@color/cream</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowBackground">@color/cream</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.ShareBite.Small</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.ShareBite.Medium</item>
+        <item name="materialCardViewStyle">@style/Widget.ShareBite.Card</item>
+        <item name="materialButtonStyle">@style/Widget.ShareBite.Button</item>
+        <item name="textInputStyle">@style/Widget.ShareBite.TextInput</item>
+        <item name="toolbarStyle">@style/Widget.ShareBite.Toolbar</item>
+        <item name="bottomNavigationStyle">@style/Widget.ShareBite.BottomNav</item>
+        <item name="chipStyle">@style/Widget.ShareBite.Chip</item>
+    </style>
+
+    <style name="Theme.ShareBite.Splash" parent="Theme.ShareBite">
+        <item name="android:statusBarColor">@color/forest_green</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowBackground">@color/forest_green</item>
+        <item name="android:navigationBarColor">@color/forest_green</item>
+    </style>
+
+    <style name="ShapeAppearance.ShareBite.Small" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerSize">@dimen/radius_m</item>
+    </style>
+
+    <style name="ShapeAppearance.ShareBite.Medium" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerSize">@dimen/radius_l</item>
+    </style>
+
+    <style name="ShapeAppearance.ShareBite.TopRounded" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">@dimen/radius_l</item>
+        <item name="cornerSizeTopRight">@dimen/radius_l</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+    <style name="Widget.ShareBite.Card" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardBackgroundColor">@color/white</item>
+        <item name="cardElevation">@dimen/card_elevation</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.ShareBite.Medium</item>
+    </style>
+
+    <style name="Widget.ShareBite.Card.Outlined" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardBackgroundColor">@color/white</item>
+        <item name="strokeColor">@color/divider</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.ShareBite.Medium</item>
+    </style>
+
+    <style name="Widget.ShareBite.Button" parent="Widget.Material3.Button">
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:textAppearance">@style/TextAppearance.ShareBite.Button</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.ShareBite.Small</item>
+    </style>
+
+    <style name="Widget.ShareBite.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:textAppearance">@style/TextAppearance.ShareBite.Button</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.ShareBite.Small</item>
+        <item name="strokeColor">@color/forest_green</item>
+    </style>
+
+    <style name="Widget.ShareBite.Button.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textAppearance">@style/TextAppearance.ShareBite.Button</item>
+    </style>
+
+    <style name="Widget.ShareBite.Button.Tonal" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:minHeight">@dimen/touch_target</item>
+        <item name="android:textAppearance">@style/TextAppearance.ShareBite.Button</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.ShareBite.Small</item>
+    </style>
+
+    <style name="Widget.ShareBite.Button.Danger" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minHeight">@dimen/touch_target</item>
+        <item name="android:textColor">@color/error_red</item>
+        <item name="strokeColor">@color/error_red</item>
+        <item name="android:textAppearance">@style/TextAppearance.ShareBite.Button</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.ShareBite.Small</item>
+    </style>
+
+    <style name="Widget.ShareBite.TextInput" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">@dimen/radius_m</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radius_m</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radius_m</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/radius_m</item>
+        <item name="boxBackgroundColor">@color/white</item>
+        <item name="boxStrokeColor">@color/forest_green</item>
+        <item name="hintTextColor">@color/forest_green</item>
+    </style>
+
+    <style name="Widget.ShareBite.TextInput.Dropdown" parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="boxCornerRadiusTopStart">@dimen/radius_m</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radius_m</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radius_m</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/radius_m</item>
+        <item name="boxBackgroundColor">@color/white</item>
+        <item name="boxStrokeColor">@color/forest_green</item>
+        <item name="hintTextColor">@color/forest_green</item>
+    </style>
+
+    <style name="Widget.ShareBite.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/cream</item>
+        <item name="titleTextAppearance">@style/TextAppearance.ShareBite.ToolbarTitle</item>
+        <item name="titleTextColor">@color/charcoal</item>
+    </style>
+
+    <style name="Widget.ShareBite.BottomNav" parent="Widget.Material3.BottomNavigationView">
+        <item name="android:background">@color/white</item>
+        <item name="itemActiveIndicatorStyle">@style/Widget.ShareBite.BottomNav.Indicator</item>
+        <item name="itemIconTint">@color/bottom_nav_item</item>
+        <item name="itemTextColor">@color/bottom_nav_item</item>
+        <item name="itemTextAppearanceActive">@style/TextAppearance.ShareBite.NavLabel</item>
+        <item name="itemTextAppearanceInactive">@style/TextAppearance.ShareBite.NavLabel</item>
+    </style>
+
+    <style name="Widget.ShareBite.BottomNav.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/soft_green</item>
+    </style>
+
+    <style name="Widget.ShareBite.Chip" parent="Widget.Material3.Chip.Filter">
+        <item name="chipBackgroundColor">@color/chip_background</item>
+        <item name="android:textColor">@color/chip_text</item>
+        <item name="chipStrokeColor">@color/divider</item>
+        <item name="checkedIconTint">@color/forest_green_dark</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.ShareBite.Chip</item>
+    </style>
+
+    <style name="ShapeAppearance.ShareBite.Chip" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- Typography -->
+    <style name="TextAppearance.ShareBite.Display" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">-0.01</item>
+    </style>
+
+    <style name="TextAppearance.ShareBite.Headline" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TextAppearance.ShareBite.Title" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TextAppearance.ShareBite.SectionTitle" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">19sp</item>
+    </style>
+
+    <style name="TextAppearance.ShareBite.Body" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">@color/charcoal_secondary</item>
+        <item name="android:lineSpacingMultiplier">1.15</item>
+    </style>
+
+    <style name="TextAppearance.ShareBite.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:lineSpacingMultiplier">1.15</item>
+    </style>
+
+    <style name="TextAppearance.ShareBite.Caption" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textColor">@color/charcoal_secondary</item>
+    </style>
+
+    <style name="TextAppearance.ShareBite.Label" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textColor">@color/charcoal_secondary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TextAppearance.ShareBite.Badge" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:letterSpacing">0.04</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="TextAppearance.ShareBite.Stat" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textColor">@color/forest_green</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TextAppearance.ShareBite.Button" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="TextAppearance.ShareBite.ToolbarTitle" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/charcoal</item>
+    </style>
+
+    <style name="TextAppearance.ShareBite.NavLabel" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">11sp</item>
+    </style>
+
+    <style name="ShareBite.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/ShareBite.BottomSheet</item>
+    </style>
+
+    <style name="ShareBite.BottomSheet" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="backgroundTint">@color/white</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.ShareBite.TopRounded</item>
+    </style>
+</resources>

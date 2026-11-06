@@ -1,0 +1,6 @@
+// Top-level build file. Module-specific configuration lives in app/build.gradle.
+plugins {
+    alias(libs.plugins.android.application) apply false
+    // Applied conditionally in app/build.gradle (only when google-services.json is present).
+    alias(libs.plugins.google.services) apply false
+}

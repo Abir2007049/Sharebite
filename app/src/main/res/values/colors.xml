@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand palette -->
+    <color name="forest_green">#1F5135</color>
+    <color name="forest_green_dark">#143823</color>
+    <color name="leaf_green">#4E9F3D</color>
+    <color name="soft_green">#CFE8C9</color>
+    <color name="mint_container">#E6F3E2</color>
+    <color name="cream">#FAF7F0</color>
+    <color name="cream_dark">#F1ECE1</color>
+    <color name="white">#FFFFFF</color>
+    <color name="charcoal">#23282D</color>
+    <color name="charcoal_secondary">#5C6166</color>
+    <color name="charcoal_hint">#8A8F94</color>
+    <color name="divider">#E6E1D6</color>
+
+    <!-- Semantic colours -->
+    <color name="free_green">#2E7D32</color>
+    <color name="free_green_bg">#E3F2E1</color>
+    <color name="discount_amber">#A35C00</color>
+    <color name="discount_amber_bg">#FFF0D9</color>
+    <color name="charity_berry">#8A2F68</color>
+    <color name="charity_berry_bg">#F8E4F0</color>
+    <color name="warning_amber">#8A5300</color>
+    <color name="warning_bg">#FFF4DD</color>
+    <color name="error_red">#B3261E</color>
+    <color name="error_bg">#FBE7E5</color>
+    <color name="info_blue">#1F5F8B</color>
+    <color name="info_bg">#E3EFF7</color>
+    <color name="neutral_status_bg">#ECEAE5</color>
+
+    <color name="scrim_dark">#99000000</color>
+    <color name="image_placeholder">#E9E4D8</color>
+</resources>
