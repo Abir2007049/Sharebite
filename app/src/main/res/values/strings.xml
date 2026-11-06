@@ -96,5 +96,8 @@
     <string name="time_left_ended">Pickup closed</string>
     <string name="time_left_minutes">Ends in %d min</string>
     <string name="time_left_hours">Ends in %1$dh %2$dm</string>
-    <string name="time_left_days">Ends in %d days</string>
+    <plurals name="time_left_days">
+        <item quantity="one">Ends in %d day</item>
+        <item quantity="other">Ends in %d days</item>
+    </plurals>
 </resources>

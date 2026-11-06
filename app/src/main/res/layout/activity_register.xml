@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cream"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -60,8 +60,10 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="@dimen/space_l"
-                    android:paddingEnd="40dp">
+                    android:paddingStart="@dimen/space_l"
+                    android:paddingTop="@dimen/space_l"
+                    android:paddingEnd="40dp"
+                    android:paddingBottom="@dimen/space_l">
 
                     <ImageView
                         android:layout_width="44dp"
@@ -107,8 +109,10 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="@dimen/space_l"
-                    android:paddingEnd="40dp">
+                    android:paddingStart="@dimen/space_l"
+                    android:paddingTop="@dimen/space_l"
+                    android:paddingEnd="40dp"
+                    android:paddingBottom="@dimen/space_l">
 
                     <ImageView
                         android:layout_width="44dp"
@@ -154,8 +158,10 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="@dimen/space_l"
-                    android:paddingEnd="40dp">
+                    android:paddingStart="@dimen/space_l"
+                    android:paddingTop="@dimen/space_l"
+                    android:paddingEnd="40dp"
+                    android:paddingBottom="@dimen/space_l">
 
                     <ImageView
                         android:layout_width="44dp"
@@ -219,6 +225,7 @@
                 app:startIconDrawable="@drawable/ic_business">
 
                 <AutoCompleteTextView
+                    tools:ignore="LabelFor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none" />

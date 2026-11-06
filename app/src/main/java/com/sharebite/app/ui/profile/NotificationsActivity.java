@@ -1,7 +1,6 @@
 package com.sharebite.app.ui.profile;
 
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -73,6 +72,8 @@ public class NotificationsActivity extends BaseActivity {
         }
     }
 
+    private static final int MENU_MARK_ALL = 1;
+
     private ActivityNotificationsBinding binding;
     private NotificationsViewModel viewModel;
 
@@ -104,38 +105,24 @@ public class NotificationsActivity extends BaseActivity {
         binding.emptyState.emptyMessage.setText(R.string.empty_notifications_message);
         binding.emptyState.emptyIcon.setImageResource(R.drawable.ic_notifications);
 
+        MenuItem markAll = binding.toolbar.getMenu().add(0, MENU_MARK_ALL, 0, R.string.mark_all_read);
+        markAll.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        markAll.setVisible(false);
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() != MENU_MARK_ALL) return false;
+            viewModel.markAllRead();
+            return true;
+        });
+
         viewModel.items().observe(this, state -> {
             ViewUtils.visible(binding.progress, state.isLoading());
             if (state.message != null) showMessage(state.message);
             List<AppNotification> list = state.data;
             adapter.submitList(list);
             ViewUtils.visible(binding.emptyState.getRoot(), list != null && list.isEmpty());
-            invalidateOptionsMenu();
+            boolean anyUnread = false;
+            if (list != null) for (AppNotification n : list) if (!n.isRead()) { anyUnread = true; break; }
+            markAll.setVisible(anyUnread);
         });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0, 1, 0, R.string.mark_all_read).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        UiState<List<AppNotification>> s = viewModel == null ? null : viewModel.items().getValue();
-        boolean anyUnread = false;
-        if (s != null && s.data != null) for (AppNotification n : s.data) if (!n.isRead()) { anyUnread = true; break; }
-        MenuItem item = menu.findItem(1);
-        if (item != null) item.setVisible(anyUnread);
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == 1) {
-            viewModel.markAllRead();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

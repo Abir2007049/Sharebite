@@ -4,12 +4,12 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.gson.Gson;
 import com.sharebite.app.BuildConfig;
+import com.sharebite.app.FirebaseSetup;
 import com.sharebite.app.data.remote.HttpJsonClient;
 import com.sharebite.app.data.remote.NominatimGeocodingService;
 import com.sharebite.app.data.remote.OpenMeteoWeatherService;
@@ -48,7 +48,7 @@ public final class ServiceLocator {
 
     private ServiceLocator(Context context) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        imageStorage = new FirebaseImageStorage(FirebaseStorage.getInstance());
+        imageStorage = new FirebaseImageStorage(FirebaseStorage::getInstance);
         userRepository = new FirestoreUserRepository(db);
         authRepository = new FirebaseAuthRepository(FirebaseAuth.getInstance(), userRepository);
         foodRepository = new FirestoreFoodRepository(db, imageStorage);
@@ -62,9 +62,9 @@ public final class ServiceLocator {
         sessionManager = new SessionManager(FirebaseAuth.getInstance(), userRepository);
     }
 
-    /** True when google-services.json was present at build time and Firebase initialised. */
+    /** True when Firebase initialised (from google-services.json or in emulator mode). */
     public static boolean isFirebaseConfigured(@NonNull Context context) {
-        return BuildConfig.FIREBASE_CONFIGURED && !FirebaseApp.getApps(context).isEmpty();
+        return FirebaseSetup.isReady(context);
     }
 
     public static void init(@NonNull Context context) {

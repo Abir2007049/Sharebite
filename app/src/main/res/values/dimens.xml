@@ -9,7 +9,6 @@
     <dimen name="space_xxl">32dp</dimen>
     <dimen name="screen_padding">20dp</dimen>
 
-    <dimen name="radius_s">8dp</dimen>
     <dimen name="radius_m">12dp</dimen>
     <dimen name="radius_l">18dp</dimen>
     <dimen name="radius_xl">24dp</dimen>
@@ -17,9 +16,6 @@
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="button_height">52dp</dimen>
     <dimen name="touch_target">48dp</dimen>
-    <dimen name="icon_s">16dp</dimen>
-    <dimen name="icon_m">20dp</dimen>
-    <dimen name="icon_l">28dp</dimen>
     <dimen name="avatar">56dp</dimen>
 
     <dimen name="food_card_image_height">160dp</dimen>

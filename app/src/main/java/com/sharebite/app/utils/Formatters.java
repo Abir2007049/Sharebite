@@ -74,7 +74,8 @@ public final class Formatters {
         if (minutes < 60) return c.getString(R.string.time_left_minutes, Math.max(1, minutes));
         long hours = minutes / 60;
         if (hours < 24) return c.getString(R.string.time_left_hours, hours, minutes % 60);
-        return c.getString(R.string.time_left_days, hours / 24);
+        int days = (int) (hours / 24);
+        return c.getResources().getQuantityString(R.plurals.time_left_days, days, days);
     }
 
     /** True when fewer than {@code minutes} remain before the deadline. */

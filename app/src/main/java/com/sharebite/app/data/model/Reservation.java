@@ -5,6 +5,8 @@ import androidx.annotation.Nullable;
 
 import com.google.firebase.Timestamp;
 
+import java.util.Locale;
+
 /**
  * A request by a receiver or charity to collect part of a listing. Listing details needed for
  * history screens (title, category, unit, address) are copied in, so history stays readable even
@@ -87,8 +89,8 @@ public class Reservation implements FirestoreDocument {
         ReservationStatus current = status == null ? ReservationStatus.PENDING : status;
         if (!current.canTransitionTo(target)) {
             throw new BusinessRuleException(BusinessRuleException.Reason.INVALID_STATE,
-                    "This reservation is already " + current.name().toLowerCase() + " and cannot be changed to "
-                            + target.name().toLowerCase() + ".");
+                    "This reservation is already " + current.name().toLowerCase(Locale.ROOT) + " and cannot be changed to "
+                            + target.name().toLowerCase(Locale.ROOT) + ".");
         }
         status = target;
         switch (target) {

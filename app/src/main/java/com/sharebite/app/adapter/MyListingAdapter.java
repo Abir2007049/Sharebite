@@ -90,7 +90,7 @@ public class MyListingAdapter extends ListAdapter<FoodListing, MyListingAdapter.
         @Override
         public boolean areContentsTheSame(@NonNull FoodListing a, @NonNull FoodListing b) {
             return a.getAvailableQuantity() == b.getAvailableQuantity() && a.getTotalQuantity() == b.getTotalQuantity()
-                    && a.getStatus() == b.getStatus() && Objects.equals(a.getTitle(), b.getTitle())
+                    && Objects.equals(a.getStatus(), b.getStatus()) && Objects.equals(a.getTitle(), b.getTitle())
                     && Objects.equals(a.getImageUrl(), b.getImageUrl())
                     && Objects.equals(a.getPickupDeadline(), b.getPickupDeadline());
         }

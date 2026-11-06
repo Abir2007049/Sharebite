@@ -25,9 +25,20 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "boolean", "FIREBASE_CONFIGURED", hasFirebaseConfig.toString()
+        buildConfigField "boolean", "USE_FIREBASE_EMULATORS", "false"
+        buildConfigField "String", "EMULATOR_HOST", '"10.0.2.2"'
     }
 
     buildTypes {
+        debug {
+            // Local development against the Firebase Emulator Suite (no cloud project needed):
+            //   ./gradlew installDebug -Psharebite.useEmulators=true [-Psharebite.emulatorHost=192.168.x.y]
+            // 10.0.2.2 is the host machine as seen from the Android emulator.
+            def useEmulators = (project.findProperty('sharebite.useEmulators') ?: 'false').toString().toBoolean()
+            def emulatorHost = (project.findProperty('sharebite.emulatorHost') ?: '10.0.2.2').toString()
+            buildConfigField "boolean", "USE_FIREBASE_EMULATORS", useEmulators.toString()
+            buildConfigField "String", "EMULATOR_HOST", "\"${emulatorHost}\""
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

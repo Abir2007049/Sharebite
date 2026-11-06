@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.snackbar.Snackbar;
+import com.sharebite.app.R;
 import com.sharebite.app.data.model.User;
 import com.sharebite.app.ui.auth.SplashActivity;
 import com.sharebite.app.utils.ServiceLocator;
@@ -42,12 +43,18 @@ public abstract class BaseActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Toolbars are used standalone (not as the support action bar) so the title and navigation
+     * icon declared in each layout are kept exactly as designed.
+     */
     protected void setupToolbar(@NonNull MaterialToolbar toolbar, boolean showBack) {
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(showBack);
+        if (showBack) {
+            if (toolbar.getNavigationIcon() == null) toolbar.setNavigationIcon(R.drawable.ic_close);
+            toolbar.setNavigationContentDescription(R.string.navigate_back);
+            toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
+        } else {
+            toolbar.setNavigationIcon(null);
         }
-        if (showBack) toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
     }
 
     protected void showMessage(@NonNull String message) {

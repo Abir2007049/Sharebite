@@ -11,26 +11,43 @@ import com.sharebite.app.domain.interfaces.ResultCallback;
 /** Uploads compressed JPEGs to Firebase Storage. Paths mirror storage.rules. */
 public class FirebaseImageStorage implements ImageStorage {
 
-    private final FirebaseStorage storage;
+    /** Supplies the Storage instance lazily. */
+    public interface StorageProvider {
+        FirebaseStorage get();
+    }
 
-    public FirebaseImageStorage(@NonNull FirebaseStorage storage) {
-        this.storage = storage;
+    /**
+     * Resolved lazily: a Firebase project without Storage enabled must still be able to run the
+     * rest of the app (photos are optional), so a missing bucket surfaces as an upload error.
+     */
+    private final StorageProvider storageProvider;
+
+    public FirebaseImageStorage(@NonNull StorageProvider storageProvider) {
+        this.storageProvider = storageProvider;
     }
 
     @Override
     public void uploadListingImage(String providerId, String listingId, byte[] jpegBytes, ResultCallback<String> callback) {
         // A timestamp suffix gives each edit a fresh URL so cached old images are not shown.
-        upload(storage.getReference("listing_images/" + providerId + "/" + listingId + "_" + System.currentTimeMillis() + ".jpg"),
+        upload("listing_images/" + providerId + "/" + listingId + "_" + System.currentTimeMillis() + ".jpg",
                 jpegBytes, callback);
     }
 
     @Override
     public void uploadVerificationDocument(String organizationId, byte[] jpegBytes, ResultCallback<String> callback) {
-        upload(storage.getReference("verification_documents/" + organizationId + "/" + System.currentTimeMillis() + ".jpg"),
+        upload("verification_documents/" + organizationId + "/" + System.currentTimeMillis() + ".jpg",
                 jpegBytes, callback);
     }
 
-    private void upload(StorageReference ref, byte[] bytes, ResultCallback<String> callback) {
+    private void upload(String path, byte[] bytes, ResultCallback<String> callback) {
+        StorageReference ref;
+        try {
+            ref = storageProvider.get().getReference(path);
+        } catch (RuntimeException e) {
+            callback.onError(new IllegalStateException(
+                    "Firebase Storage is not set up for this project, so photos can't be uploaded. See README.", e));
+            return;
+        }
         StorageMetadata metadata = new StorageMetadata.Builder().setContentType("image/jpeg").build();
         ref.putBytes(bytes, metadata)
                 .continueWithTask(task -> {

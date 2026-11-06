@@ -1,5 +1,6 @@
 package com.sharebite.app.ui.auth;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.sharebite.app.utils.ViewUtils;
  * Entry point. Routes to setup instructions (no Firebase config), welcome (signed out) or the
  * main screen once the signed-in user's profile has loaded (Firebase Auth persists sessions).
  */
+@SuppressLint("CustomSplashScreen") // Routing activity (auth/profile check), shown after the system splash.
 public class SplashActivity extends AppCompatActivity {
 
     private ActivitySplashBinding binding;

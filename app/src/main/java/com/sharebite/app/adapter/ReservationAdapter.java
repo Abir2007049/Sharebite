@@ -137,7 +137,7 @@ public class ReservationAdapter extends ListAdapter<Reservation, ReservationAdap
 
         @Override
         public boolean areContentsTheSame(@NonNull Reservation a, @NonNull Reservation b) {
-            return a.getStatus() == b.getStatus() && a.getQuantity() == b.getQuantity()
+            return Objects.equals(a.getStatus(), b.getStatus()) && a.getQuantity() == b.getQuantity()
                     && Objects.equals(a.getListingImageUrl(), b.getListingImageUrl());
         }
     };
