@@ -120,7 +120,9 @@ service cloud.firestore {
                   && d.longitude is number && d.longitude >= -180 && d.longitude <= 180));
       }
 
-      allow read: if signedIn();
+      // Open listings are public so the app can be browsed before creating an account. Closed,
+      // expired or cancelled listings, and every other collection, still require sign-in.
+      allow read: if signedIn() || resource.data.status == 'AVAILABLE';
 
       allow create: if signedIn()
         && me().role == 'PROVIDER'

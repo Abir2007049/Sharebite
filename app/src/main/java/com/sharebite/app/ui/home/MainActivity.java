@@ -23,6 +23,7 @@ import com.sharebite.app.ui.BaseActivity;
 import com.sharebite.app.ui.explore.ExploreFragment;
 import com.sharebite.app.ui.impact.ImpactFragment;
 import com.sharebite.app.ui.listing.MyListingsFragment;
+import com.sharebite.app.ui.profile.GuestAccountFragment;
 import com.sharebite.app.ui.profile.ProfileFragment;
 import com.sharebite.app.ui.reservation.ReservationsFragment;
 import com.sharebite.app.utils.ServiceLocator;
@@ -41,6 +42,7 @@ public class MainActivity extends BaseActivity {
     private ActivityMainBinding binding;
     private MainViewModel viewModel;
     private UserRole role;
+    private boolean guest;
     @IdRes private int currentTab;
 
     @Override
@@ -49,15 +51,18 @@ public class MainActivity extends BaseActivity {
         User user = requireUser();
         if (user == null) return;
         role = user.getRole();
+        guest = ServiceLocator.get().session().isGuest();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         applySystemBarInsets(binding.fragmentContainer, true, false);
 
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        viewModel.start(user);
+        if (guest) viewModel.startGuest();
+        else viewModel.start(user);
 
-        binding.bottomNav.inflateMenu(role == UserRole.PROVIDER ? R.menu.menu_nav_provider
+        binding.bottomNav.inflateMenu(guest ? R.menu.menu_nav_guest
+                : role == UserRole.PROVIDER ? R.menu.menu_nav_provider
                 : role == UserRole.CHARITY ? R.menu.menu_nav_charity : R.menu.menu_nav_receiver);
         currentTab = savedInstanceState != null ? savedInstanceState.getInt(STATE_TAB, R.id.nav_home) : R.id.nav_home;
         // Select before attaching the listener so the initial tab is shown exactly once.
@@ -70,9 +75,9 @@ public class MainActivity extends BaseActivity {
         ServiceLocator.get().session().currentUser().observe(this, updated -> {
             if (updated == null) {
                 restartApp();
-            } else if (updated.getRole() != role) {
+            } else if (updated.getRole() != role || ServiceLocator.get().session().isGuest() != guest) {
                 recreate();
-            } else {
+            } else if (!guest) {
                 viewModel.start(updated);
             }
         });
@@ -125,7 +130,7 @@ public class MainActivity extends BaseActivity {
         if (tabId == R.id.nav_listings) return new MyListingsFragment();
         if (tabId == R.id.nav_reservations) return new ReservationsFragment();
         if (tabId == R.id.nav_impact) return new ImpactFragment();
-        if (tabId == R.id.nav_profile) return new ProfileFragment();
+        if (tabId == R.id.nav_profile) return guest ? new GuestAccountFragment() : new ProfileFragment();
         return null;
     }
 

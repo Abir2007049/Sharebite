@@ -12,6 +12,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.sharebite.app.databinding.ActivityWelcomeBinding;
+import com.sharebite.app.ui.home.MainActivity;
+import com.sharebite.app.utils.ServiceLocator;
 
 /** First screen for signed-out users: what ShareBite does, then register or log in. */
 public class WelcomeActivity extends AppCompatActivity {
@@ -29,5 +31,10 @@ public class WelcomeActivity extends AppCompatActivity {
         });
         binding.registerButton.setOnClickListener(v -> startActivity(new Intent(this, RegisterActivity.class)));
         binding.loginButton.setOnClickListener(v -> startActivity(new Intent(this, LoginActivity.class)));
+        binding.guestButton.setOnClickListener(v -> {
+            ServiceLocator.get().session().startGuest();
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        });
     }
 }

@@ -26,3 +26,7 @@ firestore-debug.log
 ui-debug.log
 node_modules/
 firebase-tests/node_modules/
+
+# Demo-seed password (generated locally)
+firebase-tests/.seed-credentials.json
+.seed-credentials.json

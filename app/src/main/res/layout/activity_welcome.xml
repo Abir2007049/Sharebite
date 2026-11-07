@@ -78,9 +78,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_m"
-            android:layout_marginBottom="@dimen/space_xl"
             android:text="@string/have_account"
             android:textColor="@color/white"
             app:strokeColor="#80FFFFFF" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/guestButton"
+            style="@style/Widget.ShareBite.Button.Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/space_xl"
+            android:text="@string/browse_as_guest"
+            android:textColor="@color/white" />
     </LinearLayout>
 </ScrollView>

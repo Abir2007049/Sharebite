@@ -145,6 +145,7 @@ All dates are Firestore `Timestamp`s; enums are stored by name.
 [`firestore.rules`](firestore.rules) is the authority for every critical rule:
 
 - Users can create only their own profile, can't register as verified, and can't change their `role`, `email` or `verificationStatus`. A charity can move itself to `PENDING` only in the same batch as its submission. Reviewers (custom claim `admin`) can do anything.
+- **Open listings (`status == AVAILABLE`) are readable without an account**, so the app can be browsed as a guest. Closed listings, profiles, reservations and notifications still need sign-in, and guests can't write anything.
 - Only providers create listings, and only for themselves. Food-safety fields, time ordering, prices and coordinates are validated. Owners can't reopen closed listings or drop below already-reserved units.
 - **Non-owners can change a listing only by:**
   - *reserving:* a new `PENDING` reservation of theirs, created in the same transaction, for exactly the quantity removed, before the deadline, while `AVAILABLE`; or
@@ -217,6 +218,20 @@ The Android emulator reaches your machine at `10.0.2.2`, which is the default. C
 
 ---
 
+## Demo data and guest browsing
+
+- **Guest mode:** the Welcome screen has *Browse food without an account*. Guests can see Home, Explore, the map and listing details. Reserving, reservations, notifications and impact need an account, and the app sends guests to log in. A guest has no profile and no uid, and nothing is stored for them.
+- **Demo seed:** `firebase-tests/seed.mjs` signs up four demo accounts (two providers, a receiver and a charity) and creates six clearly labelled demo listings plus one pending reservation in the project from `app/google-services.json`. It uses the normal client SDK, so every write passes through your deployed security rules (no admin key). Add `SEED_PLACE="Your City"` to pin the listings around a real place found via OpenStreetMap.
+
+```bash
+cd firebase-tests && npm install
+node seed.mjs            # or:  SEED_PLACE="Kolkata, India" node seed.mjs
+```
+
+The shared demo password is generated on first run and saved to the git-ignored `firebase-tests/.seed-credentials.json` (or set `SEED_PASSWORD`). The demo emails use the reserved `.example` domain. The charity starts `UNVERIFIED`, because verification is a reviewer step (see above). Re-running leaves existing demo data alone. Delete the demo documents in the console to reseed.
+
+---
+
 ## External APIs
 
 Both APIs are free and need no key. Calls run on a background executor through `HttpJsonClient` (`HttpURLConnection`, 10 s connect / 15 s read timeouts). Responses are parsed with Gson into DTOs and mapped to app models. Network failures, timeouts, non-2xx responses, malformed JSON and empty results each produce a specific `ApiException` and a user-facing message.
@@ -237,7 +252,7 @@ Nominatim's usage policy asks for an identifying `User-Agent` (sent as `ShareBit
 ./gradlew lintDebug                # Android lint (0 errors)
 
 cd firebase-tests && npm install
-npm test                           # 33 security-rules tests on the Firestore emulator
+npm test                           # 35 security-rules tests on the Firestore emulator
 ```
 
 - **JVM unit tests** (`app/src/test`) cover:

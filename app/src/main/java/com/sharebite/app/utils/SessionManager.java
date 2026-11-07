@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.sharebite.app.data.model.Receiver;
 import com.sharebite.app.data.model.User;
 import com.sharebite.app.domain.interfaces.ResultCallback;
 import com.sharebite.app.domain.interfaces.Subscription;
@@ -22,6 +23,7 @@ public final class SessionManager {
     private final MutableLiveData<User> currentUser = new MutableLiveData<>();
     private Subscription profileSubscription = Subscription.NONE;
     private String observedUid;
+    private boolean guest;
 
     SessionManager(@NonNull FirebaseAuth auth, @NonNull UserRepository users) {
         this.auth = auth;
@@ -37,6 +39,23 @@ public final class SessionManager {
         return auth.getCurrentUser() != null;
     }
 
+    /** True while browsing without an account. A guest has no uid and never touches user data. */
+    public boolean isGuest() {
+        return guest;
+    }
+
+    /**
+     * Starts browsing without an account. The placeholder profile is never stored anywhere; it only
+     * lets the receiver-style screens render. Everything that needs an account checks {@link #isGuest()}.
+     */
+    public void startGuest() {
+        profileSubscription.cancel();
+        profileSubscription = Subscription.NONE;
+        observedUid = null;
+        guest = true;
+        currentUser.setValue(new Receiver("", "Guest", "", ""));
+    }
+
     public LiveData<User> currentUser() {
         return currentUser;
     }
@@ -49,6 +68,7 @@ public final class SessionManager {
 
     /** Publishes a freshly loaded profile and starts listening for changes to it. */
     public void start(@NonNull User user) {
+        guest = false;
         currentUser.setValue(user);
         if (user.getUid().equals(observedUid)) return;
         profileSubscription.cancel();
@@ -68,6 +88,7 @@ public final class SessionManager {
     }
 
     public void signOut() {
+        guest = false;
         profileSubscription.cancel();
         profileSubscription = Subscription.NONE;
         observedUid = null;

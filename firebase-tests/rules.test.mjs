@@ -212,9 +212,32 @@ describe('foodListings', () => {
     }));
   });
 
-  test('any signed-in user can read listings; anonymous users cannot', async () => {
+  test('signed-in users can read listings of any status', async () => {
     await assertSucceeds(getDocs(query(collection(db('alice'), 'foodListings'), where('status', '==', 'AVAILABLE'))));
-    await assertFails(getDoc(doc(env.unauthenticatedContext().firestore(), 'foodListings', 'free1')));
+    await seed((fs) => setDoc(doc(fs, 'foodListings', 'done1'), listingDoc('done1', 'provider1', { status: 'COMPLETED' })));
+    await assertSucceeds(getDoc(doc(db('alice'), 'foodListings', 'done1')));
+  });
+
+  test('guests can browse open listings but nothing else', async () => {
+    const guest = env.unauthenticatedContext().firestore();
+    await assertSucceeds(getDocs(query(collection(guest, 'foodListings'), where('status', '==', 'AVAILABLE'))));
+    await assertSucceeds(getDoc(doc(guest, 'foodListings', 'free1')));
+    // Closed listings, profiles, reservations and notifications stay private.
+    await seed((fs) => setDoc(doc(fs, 'foodListings', 'done1'), listingDoc('done1', 'provider1', { status: 'COMPLETED' })));
+    await assertFails(getDoc(doc(guest, 'foodListings', 'done1')));
+    await assertFails(getDocs(collection(guest, 'foodListings')));
+    await assertFails(getDoc(doc(guest, 'users', 'provider1')));
+    await assertFails(getDocs(collection(guest, 'reservations')));
+    await assertFails(getDocs(collection(guest, 'notifications')));
+  });
+
+  test('guests cannot write listings or reserve stock', async () => {
+    const guest = env.unauthenticatedContext().firestore();
+    await assertFails(setDoc(doc(guest, 'foodListings', 'g1'), listingDoc('g1', 'provider1')));
+    await assertFails(updateDoc(doc(guest, 'foodListings', 'free1'), {
+      availableQuantity: 0, status: 'FULLY_RESERVED', lastReservationId: 'ghost', updatedAt: serverTimestamp(),
+    }));
+    await assertFails(updateDoc(doc(guest, 'foodListings', 'free1'), { title: 'Hacked title' }));
   });
 });
 

@@ -33,9 +33,11 @@ import com.sharebite.app.ui.BaseActivity;
 import com.sharebite.app.ui.explore.MapSupport;
 import com.sharebite.app.ui.reservation.ReservationActionController;
 import com.sharebite.app.ui.reservation.ReservationDetailActivity;
+import com.sharebite.app.ui.auth.LoginActivity;
 import com.sharebite.app.utils.Formatters;
 import com.sharebite.app.utils.ImageLoader;
 import com.sharebite.app.utils.LocationHelper;
+import com.sharebite.app.utils.ServiceLocator;
 import com.sharebite.app.utils.UiState;
 import com.sharebite.app.utils.ViewUtils;
 
@@ -264,6 +266,15 @@ public class ListingDetailActivity extends BaseActivity implements ReserveBottom
     private void bindConsumerActions(FoodListing l, Date now) {
         ViewUtils.visible(binding.actionBar, true);
         ViewUtils.visible(binding.secondaryButton, false);
+        if (ServiceLocator.get().session().isGuest()) {
+            // Browsing is open to everyone; acting needs an account.
+            binding.primaryButton.setText(R.string.sign_in_to_reserve);
+            binding.primaryButton.setEnabled(true);
+            ViewUtils.visible(binding.actionNote, true);
+            binding.actionNote.setText(R.string.guest_reserve_note);
+            binding.primaryButton.setOnClickListener(v -> startActivity(new Intent(this, LoginActivity.class)));
+            return;
+        }
         binding.primaryButton.setText(R.string.reserve);
         String blocker = reserveBlocker(l, now);
         binding.primaryButton.setEnabled(blocker == null && !Boolean.TRUE.equals(viewModel.busy().getValue()));

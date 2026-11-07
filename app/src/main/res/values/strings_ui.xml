@@ -403,4 +403,12 @@
         <item quantity="one">%d result</item>
         <item quantity="other">%d results</item>
     </plurals>
+
+    <!-- Guest browsing -->
+    <string name="nav_account">Account</string>
+    <string name="browse_as_guest">Browse food without an account</string>
+    <string name="guest_account_title">You\'re browsing as a guest</string>
+    <string name="guest_account_message">You can look at what\'s available nearby. Create a free account to reserve food, track your pickups and see your impact.</string>
+    <string name="sign_in_to_reserve">Sign in to reserve</string>
+    <string name="guest_reserve_note">Create an account or log in to reserve this food.</string>
 </resources>

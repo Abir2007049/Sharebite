@@ -38,6 +38,11 @@ public abstract class BaseTabFragment extends Fragment {
         header.headerTitle.setText(title);
         ViewUtils.visible(header.headerSubtitle, subtitle != null);
         if (subtitle != null) header.headerSubtitle.setText(subtitle);
+        if (ServiceLocator.get().session().isGuest()) {
+            // Notifications belong to an account; guests have none.
+            ((View) header.notificationsButton.getParent()).setVisibility(View.GONE);
+            return;
+        }
         header.notificationsButton.setOnClickListener(v -> startActivity(new Intent(requireContext(), NotificationsActivity.class)));
         mainViewModel().notifications().observe(getViewLifecycleOwner(), list -> {
             int unread = mainViewModel().unreadCount();

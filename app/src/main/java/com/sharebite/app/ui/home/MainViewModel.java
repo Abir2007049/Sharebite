@@ -67,6 +67,15 @@ public class MainViewModel extends ViewModel {
         }));
     }
 
+    /** Guests only see open listings; there are no reservations or notifications to load. */
+    public void startGuest() {
+        if ("".equals(startedForUid)) return;
+        stop();
+        startedForUid = "";
+        startedForRole = UserRole.RECEIVER;
+        subscriptions.add(services.food().observeAvailableListings(into(availableListings)));
+    }
+
     public LiveData<UiState<List<FoodListing>>> availableListings() { return availableListings; }
     public LiveData<UiState<List<FoodListing>>> myListings() { return myListings; }
     public LiveData<UiState<List<Reservation>>> reservations() { return reservations; }
