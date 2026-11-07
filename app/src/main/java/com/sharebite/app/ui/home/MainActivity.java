@@ -2,10 +2,14 @@ package com.sharebite.app.ui.home;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -56,6 +60,7 @@ public class MainActivity extends BaseActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         applySystemBarInsets(binding.fragmentContainer, true, false);
+        floatNavAboveSystemBars();
 
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         if (guest) viewModel.startGuest();
@@ -83,6 +88,24 @@ public class MainActivity extends BaseActivity {
         });
         viewModel.reservations().observe(this, state -> updateReservationBadge(state.data));
         viewModel.notifications().observe(this, this::onNotifications);
+    }
+
+    /**
+     * The bottom navigation floats as a rounded pill: keep it clear of the gesture/navigation bar
+     * by adding the system inset to its margins, and stop the insets reaching the nav view itself.
+     */
+    private void floatNavAboveSystemBars() {
+        ViewGroup.MarginLayoutParams base = (ViewGroup.MarginLayoutParams) binding.navCard.getLayoutParams();
+        final int start = base.leftMargin, end = base.rightMargin, bottom = base.bottomMargin;
+        ViewCompat.setOnApplyWindowInsetsListener(binding.navCard, (v, insets) -> {
+            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            lp.leftMargin = start + bars.left;
+            lp.rightMargin = end + bars.right;
+            lp.bottomMargin = bottom + bars.bottom;
+            v.setLayoutParams(lp);
+            return WindowInsetsCompat.CONSUMED;
+        });
     }
 
     @Override

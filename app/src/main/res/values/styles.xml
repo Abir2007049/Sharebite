@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Namespace root: "ShareBite.X" styles implicitly inherit from this. -->
     <style name="ShareBite" />
+
+    <!-- Gradient hero banner that floats: rounded clip (Android 12+) and a tinted soft shadow. -->
+    <style name="ShareBite.Hero">
+        <item name="android:background">@drawable/bg_hero</item>
+        <item name="android:elevation">@dimen/card_elevation</item>
+        <item name="android:outlineProvider">background</item>
+        <item name="android:clipToOutline" tools:targetApi="s">true</item>
+        <item name="android:outlineSpotShadowColor" tools:targetApi="p">@color/forest_green</item>
+        <item name="android:outlineAmbientShadowColor" tools:targetApi="p">@color/forest_green</item>
+    </style>
 
     <style name="ShareBite.WelcomeFeature">
         <item name="android:layout_width">match_parent</item>
@@ -46,7 +56,7 @@
         <item name="android:drawablePadding">@dimen/space_s</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textAppearance">@style/TextAppearance.ShareBite.Body</item>
-        <item name="drawableTint">@color/leaf_green</item>
+        <item name="drawableTint">@color/forest_green</item>
     </style>
 
     <style name="ShareBite.SectionHeader">

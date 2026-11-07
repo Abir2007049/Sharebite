@@ -1,8 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <gradient
-        android:angle="315"
-        android:endColor="@color/forest_green_dark"
-        android:startColor="@color/leaf_green" />
-    <corners android:radius="@dimen/radius_xl" />
-</shape>
+<!-- Hero banner: deep emerald gradient with two soft light orbs for depth. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="315"
+                android:endColor="@color/forest_green_dark"
+                android:centerColor="@color/forest_green"
+                android:startColor="@color/leaf_green" />
+            <corners android:radius="@dimen/radius_xl" />
+        </shape>
+    </item>
+    <item
+        android:width="180dp"
+        android:height="180dp"
+        android:gravity="top|end"
+        android:right="-60dp"
+        android:top="-80dp">
+        <shape android:shape="oval">
+            <solid android:color="#14FFFFFF" />
+        </shape>
+    </item>
+    <item
+        android:width="110dp"
+        android:height="110dp"
+        android:gravity="bottom|end"
+        android:bottom="-50dp"
+        android:right="70dp">
+        <shape android:shape="oval">
+            <solid android:color="#0FFFFFFF" />
+        </shape>
+    </item>
+</layer-list>

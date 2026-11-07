@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <gradient
-        android:angle="270"
-        android:endColor="@color/forest_green_dark"
-        android:startColor="@color/forest_green" />
-</shape>
+<!-- Welcome / onboarding backdrop: vertical emerald gradient with a soft radial glow at the top. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:endColor="#03261D"
+                android:centerColor="@color/forest_green_dark"
+                android:startColor="@color/forest_green" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:centerX="0.85"
+                android:centerY="0.12"
+                android:endColor="#001F9D74"
+                android:gradientRadius="420dp"
+                android:startColor="#661F9D74"
+                android:type="radial" />
+        </shape>
+    </item>
+</layer-list>

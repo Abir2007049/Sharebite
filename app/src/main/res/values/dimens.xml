@@ -9,18 +9,24 @@
     <dimen name="space_xxl">32dp</dimen>
     <dimen name="screen_padding">20dp</dimen>
 
-    <dimen name="radius_m">12dp</dimen>
-    <dimen name="radius_l">18dp</dimen>
-    <dimen name="radius_xl">24dp</dimen>
+    <dimen name="radius_m">14dp</dimen>
+    <dimen name="radius_l">20dp</dimen>
+    <dimen name="radius_xl">28dp</dimen>
 
-    <dimen name="card_elevation">2dp</dimen>
+    <!-- Floating surfaces: soft, diffused shadows (see shadow alphas in the theme). -->
+    <dimen name="card_elevation">6dp</dimen>
+    <dimen name="card_elevation_low">2dp</dimen>
+    <dimen name="card_lift">6dp</dimen>
+    <dimen name="nav_elevation">14dp</dimen>
+    <dimen name="nav_margin">16dp</dimen>
+
     <dimen name="button_height">52dp</dimen>
     <dimen name="touch_target">48dp</dimen>
     <dimen name="avatar">56dp</dimen>
 
-    <dimen name="food_card_image_height">160dp</dimen>
-    <dimen name="food_card_compact_width">232dp</dimen>
-    <dimen name="food_card_compact_image">120dp</dimen>
+    <dimen name="food_card_image_height">168dp</dimen>
+    <dimen name="food_card_compact_width">236dp</dimen>
+    <dimen name="food_card_compact_image">128dp</dimen>
     <dimen name="detail_image_height">280dp</dimen>
     <dimen name="max_content_width">640dp</dimen>
 </resources>

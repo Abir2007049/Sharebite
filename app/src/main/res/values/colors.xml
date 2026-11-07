@@ -1,34 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    ShareBite palette: "Evergreen & Slate".
+    One confident brand hue (deep emerald) on cool, quiet neutrals. Colour is reserved for meaning:
+    brand actions, and the three distribution types (free / discounted / charity).
+    Names are kept from the first palette so layouts and code stay unchanged; the comments give
+    each token's role.
+-->
 <resources>
-    <!-- Brand palette -->
-    <color name="forest_green">#1F5135</color>
-    <color name="forest_green_dark">#143823</color>
-    <color name="leaf_green">#4E9F3D</color>
-    <color name="soft_green">#CFE8C9</color>
-    <color name="mint_container">#E6F3E2</color>
-    <color name="cream">#FAF7F0</color>
-    <color name="cream_dark">#F1ECE1</color>
-    <color name="white">#FFFFFF</color>
-    <color name="charcoal">#23282D</color>
-    <color name="charcoal_secondary">#5C6166</color>
-    <color name="charcoal_hint">#8A8F94</color>
-    <color name="divider">#E6E1D6</color>
+    <!-- Brand -->
+    <color name="forest_green">#0B6B4F</color>      <!-- primary: buttons, links, active states -->
+    <color name="forest_green_dark">#063F30</color> <!-- primary pressed / deep gradient end -->
+    <color name="leaf_green">#1F9D74</color>        <!-- secondary: icons, gradient start -->
+    <color name="soft_green">#BFEBD8</color>        <!-- text on dark brand surfaces -->
+    <color name="mint_container">#E6F5EE</color>    <!-- tonal containers, icon circles -->
+    <color name="brand_glow">#33FFFFFF</color>      <!-- decorative highlight on gradients -->
 
-    <!-- Semantic colours -->
-    <color name="free_green">#2E7D32</color>
-    <color name="free_green_bg">#E3F2E1</color>
-    <color name="discount_amber">#A35C00</color>
-    <color name="discount_amber_bg">#FFF0D9</color>
-    <color name="charity_berry">#8A2F68</color>
-    <color name="charity_berry_bg">#F8E4F0</color>
-    <color name="warning_amber">#8A5300</color>
-    <color name="warning_bg">#FFF4DD</color>
-    <color name="error_red">#B3261E</color>
-    <color name="error_bg">#FBE7E5</color>
-    <color name="info_blue">#1F5F8B</color>
-    <color name="info_bg">#E3EFF7</color>
-    <color name="neutral_status_bg">#ECEAE5</color>
+    <!-- Neutrals (cool slate) -->
+    <color name="cream">#F4F6F5</color>             <!-- app background -->
+    <color name="cream_dark">#E9EDEB</color>        <!-- sunken surfaces, tracks -->
+    <color name="white">#FFFFFF</color>             <!-- cards and sheets -->
+    <color name="charcoal">#101828</color>          <!-- primary text -->
+    <color name="charcoal_secondary">#475467</color><!-- secondary text -->
+    <color name="charcoal_hint">#98A2B3</color>     <!-- hints, inactive icons -->
+    <color name="divider">#E4E7EC</color>           <!-- hairlines and outlines -->
+    <color name="card_stroke">#0F101828</color>     <!-- 6% ink hairline that crisps card edges -->
+    <color name="shadow_tint">#0B3D2E</color>       <!-- green-tinted shadow for floating surfaces -->
 
-    <color name="scrim_dark">#99000000</color>
-    <color name="image_placeholder">#E9E4D8</color>
+    <!-- Semantic -->
+    <color name="free_green">#067647</color>
+    <color name="free_green_bg">#DCFAE6</color>
+    <color name="discount_amber">#B54708</color>
+    <color name="discount_amber_bg">#FEF0C7</color>
+    <color name="charity_berry">#6941C6</color>
+    <color name="charity_berry_bg">#F1EAFE</color>
+    <color name="warning_amber">#B54708</color>
+    <color name="warning_bg">#FFFAEB</color>
+    <color name="error_red">#D92D20</color>
+    <color name="error_bg">#FEF3F2</color>
+    <color name="info_blue">#175CD3</color>
+    <color name="info_bg">#EFF8FF</color>
+    <color name="neutral_status_bg">#F2F4F7</color>
+
+    <color name="scrim_dark">#B3101828</color>
+    <color name="image_placeholder">#E6F0EC</color>
+    <color name="image_placeholder_icon">#9CC5B4</color>
 </resources>

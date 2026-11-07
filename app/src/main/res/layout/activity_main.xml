@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -10,9 +11,22 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNav"
+    <!-- Floating navigation pill. System-bar insets are added to its margins in MainActivity. -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/navCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="8dp" />
+        android:layout_marginHorizontal="@dimen/nav_margin"
+        android:layout_marginTop="@dimen/space_xs"
+        android:layout_marginBottom="@dimen/space_m"
+        android:stateListAnimator="@null"
+        app:cardElevation="@dimen/nav_elevation"
+        app:shapeAppearance="@style/ShapeAppearance.ShareBite.Nav">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:paddingBottomSystemWindowInsets="false" />
+    </com.google.android.material.card.MaterialCardView>
 </LinearLayout>
