@@ -31,6 +31,7 @@ import com.sharebite.app.ui.profile.GuestAccountFragment;
 import com.sharebite.app.ui.profile.ProfileFragment;
 import com.sharebite.app.ui.reservation.ReservationsFragment;
 import com.sharebite.app.utils.ServiceLocator;
+import com.sharebite.app.workers.PickupReminders;
 
 import java.util.List;
 
@@ -86,7 +87,10 @@ public class MainActivity extends BaseActivity {
                 viewModel.start(updated);
             }
         });
-        viewModel.reservations().observe(this, state -> updateReservationBadge(state.data));
+        viewModel.reservations().observe(this, state -> {
+            updateReservationBadge(state.data);
+            syncPickupReminders(state.data);
+        });
         viewModel.notifications().observe(this, this::onNotifications);
     }
 
@@ -155,6 +159,29 @@ public class MainActivity extends BaseActivity {
         if (tabId == R.id.nav_impact) return new ImpactFragment();
         if (tabId == R.id.nav_profile) return guest ? new GuestAccountFragment() : new ProfileFragment();
         return null;
+    }
+
+    private final androidx.activity.result.ActivityResultLauncher<String> notificationPermission =
+            registerForActivityResult(new androidx.activity.result.contract.ActivityResultContracts.RequestPermission(), granted -> { });
+
+    /** Receivers and charities get a local reminder before each confirmed pickup closes. */
+    private void syncPickupReminders(@Nullable List<Reservation> list) {
+        User me = ServiceLocator.get().session().user();
+        if (list == null || guest || me == null || role == UserRole.PROVIDER) return;
+        PickupReminders.sync(this, list, me.getUid());
+        boolean hasConfirmed = false;
+        for (Reservation r : list) if (r.getStatus() == ReservationStatus.CONFIRMED) hasConfirmed = true;
+        askForNotificationsOnce(hasConfirmed);
+    }
+
+    /** Asks for the Android 13+ notification permission once, when a reminder first matters. */
+    private void askForNotificationsOnce(boolean needed) {
+        if (!needed || android.os.Build.VERSION.SDK_INT < 33) return;
+        if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) == android.content.pm.PackageManager.PERMISSION_GRANTED) return;
+        android.content.SharedPreferences prefs = getSharedPreferences("prompts", MODE_PRIVATE);
+        if (prefs.getBoolean("asked_notifications", false)) return;
+        prefs.edit().putBoolean("asked_notifications", true).apply();
+        notificationPermission.launch(android.Manifest.permission.POST_NOTIFICATIONS);
     }
 
     /** Badge on the reservations tab: requests awaiting the provider, or the user's active ones. */

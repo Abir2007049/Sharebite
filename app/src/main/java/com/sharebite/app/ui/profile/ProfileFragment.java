@@ -54,7 +54,10 @@ public class ProfileFragment extends BaseTabFragment {
                 .setTitle(R.string.log_out_title)
                 .setMessage(R.string.log_out_message)
                 .setNegativeButton(R.string.not_now, null)
-                .setPositiveButton(R.string.log_out, (d, w) -> ServiceLocator.get().session().signOut())
+                .setPositiveButton(R.string.log_out, (d, w) -> {
+                    com.sharebite.app.workers.PickupReminders.cancelAll(requireContext());
+                    ServiceLocator.get().session().signOut();
+                })
                 .show());
         binding.versionText.setText(getString(R.string.version_format, BuildConfig.VERSION_NAME));
 

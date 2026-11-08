@@ -40,4 +40,11 @@
     <string name="allergen_conflict_card">Contains %1$s, which you avoid</string>
     <string name="allergen_conflict_title">Not for you: contains %1$s</string>
     <string name="allergen_conflict_body">Based on the provider\'s declaration. Undeclared traces are possible, so ask the provider if you are unsure.</string>
+
+    <!-- Pickup reminders -->
+    <string name="reminder_channel">Pickup reminders</string>
+    <string name="reminder_channel_description">A reminder before a confirmed pickup window closes.</string>
+    <string name="reminder_title">Pickup closes in %1$d minutes</string>
+    <string name="reminder_text">Collect %1$s before the window closes.</string>
+    <string name="reminder_text_long">Collect %1$s at %2$s before the window closes. Cancel in the app if you can\'t make it, so someone else can have it.</string>
 </resources>

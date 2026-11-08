@@ -7,6 +7,8 @@
     <!-- Optional: distance to listings and "use my location" for pickup points -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- Pickup reminders (Android 13+ asks the user). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <uses-feature
         android:name="android.hardware.location"
