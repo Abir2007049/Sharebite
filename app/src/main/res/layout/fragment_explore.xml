@@ -104,12 +104,84 @@
             android:clipToPadding="false"
             android:paddingBottom="@dimen/space_xl" />
 
-        <com.google.android.material.progressindicator.CircularProgressIndicator
+        <!-- Loading placeholders in the shape of the result cards. -->
+        <com.sharebite.app.ui.widget.SkeletonLayout
             android:id="@+id/progress"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:indeterminate="true" />
+            android:importantForAccessibility="no"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/screen_padding">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_s"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/food_card_image_height"
+                    android:background="@drawable/bg_skeleton" />
+
+                <View
+                    android:layout_width="200dp"
+                    android:layout_height="16dp"
+                    android:layout_marginTop="@dimen/space_m"
+                    android:background="@drawable/bg_skeleton_line" />
+
+                <View
+                    android:layout_width="120dp"
+                    android:layout_height="12dp"
+                    android:layout_marginTop="@dimen/space_s"
+                    android:background="@drawable/bg_skeleton_line" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_l"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/food_card_image_height"
+                    android:background="@drawable/bg_skeleton" />
+
+                <View
+                    android:layout_width="200dp"
+                    android:layout_height="16dp"
+                    android:layout_marginTop="@dimen/space_m"
+                    android:background="@drawable/bg_skeleton_line" />
+
+                <View
+                    android:layout_width="120dp"
+                    android:layout_height="12dp"
+                    android:layout_marginTop="@dimen/space_s"
+                    android:background="@drawable/bg_skeleton_line" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_l"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/food_card_image_height"
+                    android:background="@drawable/bg_skeleton" />
+
+                <View
+                    android:layout_width="200dp"
+                    android:layout_height="16dp"
+                    android:layout_marginTop="@dimen/space_m"
+                    android:background="@drawable/bg_skeleton_line" />
+
+                <View
+                    android:layout_width="120dp"
+                    android:layout_height="12dp"
+                    android:layout_marginTop="@dimen/space_s"
+                    android:background="@drawable/bg_skeleton_line" />
+            </LinearLayout>
+        </com.sharebite.app.ui.widget.SkeletonLayout>
 
         <include
             android:id="@+id/emptyState"

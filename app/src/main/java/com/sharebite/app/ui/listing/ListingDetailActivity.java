@@ -59,6 +59,10 @@ public class ListingDetailActivity extends BaseActivity implements ReserveBottom
     private LocationHelper locationHelper;
     private double[] myLocation;
 
+    /** Transition name shared by the card photo and this screen's header image. */
+    public static final String SHARED_IMAGE = "listing_image";
+    private boolean transitionStarted;
+
     public static Intent intent(Context context, String listingId) {
         return new Intent(context, ListingDetailActivity.class).putExtra(EXTRA_ID, listingId);
     }
@@ -77,6 +81,10 @@ public class ListingDetailActivity extends BaseActivity implements ReserveBottom
         setContentView(binding.getRoot());
         applySystemBarInsets(binding.getRoot(), true, true);
         setupToolbar(binding.toolbar, true);
+        binding.foodImage.setTransitionName(SHARED_IMAGE);
+        // Wait for the first render so the image lands in its final place; never wait long.
+        supportPostponeEnterTransition();
+        binding.getRoot().postDelayed(this::startTransitionOnce, 350);
 
         viewModel = new ViewModelProvider(this).get(ListingDetailViewModel.class);
         viewModel.start(id);
@@ -139,7 +147,23 @@ public class ListingDetailActivity extends BaseActivity implements ReserveBottom
         }
     }
 
+    private void startTransitionOnce() {
+        if (transitionStarted) return;
+        transitionStarted = true;
+        supportStartPostponedEnterTransition();
+    }
+
     private void render(UiState<FoodListing> state) {
+        if (state.data != null || state.message != null) {
+            binding.foodImage.getViewTreeObserver().addOnPreDrawListener(new android.view.ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    binding.foodImage.getViewTreeObserver().removeOnPreDrawListener(this);
+                    startTransitionOnce();
+                    return true;
+                }
+            });
+        }
         ViewUtils.visible(binding.progress, state.isLoading());
         FoodListing l = state.data;
         if (l == null) {
@@ -362,11 +386,15 @@ public class ListingDetailActivity extends BaseActivity implements ReserveBottom
     }
 
     private void showReservedDialog(Reservation r) {
+        android.view.View content = getLayoutInflater().inflate(R.layout.dialog_reserved, null);
+        ((android.widget.TextView) content.findViewById(R.id.reservedMessage)).setText(getString(R.string.reserved_message,
+                Formatters.quantity(this, r.getQuantity(), r.getUnit()),
+                r.getProviderName(), Formatters.dateTime(this, r.getPickupDeadline())));
+        com.sharebite.app.utils.Motion.popIn(content.findViewById(R.id.reservedBadge));
+        content.performHapticFeedback(android.os.Build.VERSION.SDK_INT >= 30
+                ? android.view.HapticFeedbackConstants.CONFIRM : android.view.HapticFeedbackConstants.VIRTUAL_KEY);
         new MaterialAlertDialogBuilder(this)
-                .setIcon(R.drawable.ic_check_circle)
-                .setTitle(R.string.reserved_title)
-                .setMessage(getString(R.string.reserved_message, Formatters.quantity(this, r.getQuantity(), r.getUnit()),
-                        r.getProviderName(), Formatters.dateTime(this, r.getPickupDeadline())))
+                .setView(content)
                 .setPositiveButton(R.string.view_reservation, (d, w) ->
                         startActivity(ReservationDetailActivity.intent(this, r.getReservationId())))
                 .setNegativeButton(R.string.done, null)

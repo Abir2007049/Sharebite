@@ -35,7 +35,8 @@ public class FoodCardAdapter extends ListAdapter<ListingItem, FoodCardAdapter.Ho
     public enum Style { FULL, COMPACT }
 
     public interface OnListingClick {
-        void onClick(@NonNull FoodListing listing);
+        /** {@code image} is the card photo, used for the shared-element transition into the detail screen. */
+        void onClick(@NonNull FoodListing listing, @NonNull View image);
     }
 
     private final Style style;
@@ -110,7 +111,7 @@ public class FoodCardAdapter extends ListAdapter<ListingItem, FoodCardAdapter.Ho
             boolean showNote = !item.reservableByUser && l.getDistributionType() == DistributionType.CHARITY;
             ViewUtils.visible(h.eligibility, showNote);
         }
-        h.itemView.setOnClickListener(v -> listener.onClick(l));
+        h.itemView.setOnClickListener(v -> listener.onClick(l, h.image));
         h.itemView.setContentDescription(l.getTitle() + ", " + c.getString(l.getDistributionType().labelRes)
                 + ", " + h.quantity.getText());
     }

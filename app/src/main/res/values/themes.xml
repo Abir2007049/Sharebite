@@ -31,6 +31,7 @@
         <item name="android:ambientShadowAlpha">0.035</item>
         <item name="android:spotShadowAlpha">0.13</item>
         <item name="android:windowBackground">@color/cream</item>
+        <item name="android:windowActivityTransitions">true</item>
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
 
         <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.ShareBite.Small</item>

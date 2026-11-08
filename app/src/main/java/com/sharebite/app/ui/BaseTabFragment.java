@@ -52,6 +52,14 @@ public abstract class BaseTabFragment extends Fragment {
         });
     }
 
+    /** Opens a listing, morphing the tapped card photo into the detail screen header. */
+    protected void openListing(@NonNull FoodListing listing, @NonNull View image) {
+        image.setTransitionName(ListingDetailActivity.SHARED_IMAGE);
+        android.os.Bundle options = androidx.core.app.ActivityOptionsCompat
+                .makeSceneTransitionAnimation(requireActivity(), image, ListingDetailActivity.SHARED_IMAGE).toBundle();
+        startActivity(ListingDetailActivity.intent(requireContext(), listing.getListingId()), options);
+    }
+
     protected void openListing(@NonNull FoodListing listing) {
         startActivity(ListingDetailActivity.intent(requireContext(), listing.getListingId()));
     }

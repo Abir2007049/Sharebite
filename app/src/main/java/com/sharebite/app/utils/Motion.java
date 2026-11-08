@@ -39,6 +39,14 @@ public final class Motion {
         a.start();
     }
 
+    /** Scales a view up from nothing with a slight overshoot (success badges). */
+    public static void popIn(@NonNull View view) {
+        view.setScaleX(0f);
+        view.setScaleY(0f);
+        view.animate().scaleX(1f).scaleY(1f).setStartDelay(120).setDuration(420)
+                .setInterpolator(new android.view.animation.OvershootInterpolator(2.2f)).start();
+    }
+
     /** Fades and slides a view in from slightly below. */
     public static void enter(@NonNull View view, long delayMs) {
         view.setAlpha(0f);
