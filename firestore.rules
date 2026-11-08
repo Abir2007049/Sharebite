@@ -289,6 +289,23 @@ service cloud.firestore {
 
       allow delete: if false;
 
+      // Messages between the two parties. Writable while the reservation is open; history stays readable.
+      match /messages/{messageId} {
+        function res() { return get(reservationPath(resId)).data; }
+        function party() { return res().providerId == uid() || res().receiverId == uid(); }
+
+        allow read: if signedIn() && party();
+        allow create: if signedIn() && party()
+          && res().status in ['PENDING', 'CONFIRMED']
+          && request.resource.data.keys().hasOnly(['messageId', 'senderId', 'senderName', 'text', 'createdAt'])
+          && request.resource.data.messageId == messageId
+          && request.resource.data.senderId == uid()
+          && str(request.resource.data.senderName, 1, 80)
+          && str(request.resource.data.text, 1, 500)
+          && request.resource.data.createdAt == request.time;
+        allow update, delete: if false;
+      }
+
       // One-time pickup code. Created by the receiver in the same transaction as the reservation,
       // readable only by the receiver; the provider never reads it, it can only prove it (above).
       match /private/{docId} {

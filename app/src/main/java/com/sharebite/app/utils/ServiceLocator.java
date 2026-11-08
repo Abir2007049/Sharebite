@@ -46,6 +46,7 @@ public final class ServiceLocator {
     private final WeatherService weatherService;
     private final SessionManager sessionManager;
     private final AllergenPreferences allergenPreferences;
+    private final com.sharebite.app.domain.interfaces.ChatRepository chatRepository;
 
     private ServiceLocator(Context context) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -62,6 +63,7 @@ public final class ServiceLocator {
         weatherService = new OpenMeteoWeatherService(http);
         sessionManager = new SessionManager(FirebaseAuth.getInstance(), userRepository);
         allergenPreferences = new AllergenPreferences(context);
+        chatRepository = new com.sharebite.app.data.repository.FirestoreChatRepository(db);
     }
 
     /** True when Firebase initialised (from google-services.json or in emulator mode). */
@@ -94,4 +96,5 @@ public final class ServiceLocator {
     public WeatherService weather() { return weatherService; }
     public SessionManager session() { return sessionManager; }
     public AllergenPreferences allergens() { return allergenPreferences; }
+    public com.sharebite.app.domain.interfaces.ChatRepository chat() { return chatRepository; }
 }

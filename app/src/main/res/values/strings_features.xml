@@ -78,4 +78,12 @@
     <string name="scan_verified">Pickup verified and marked as collected.</string>
     <string name="timeline_collected_qr">Collected (verified by QR code)</string>
     <string name="messages">Messages</string>
+    <string name="handover_text_pending">Once the provider confirms, a QR code appears here for the pickup. You can already message each other.</string>
+
+    <!-- Reservation chat -->
+    <string name="chat_hint">Message</string>
+    <string name="chat_send">Send</string>
+    <string name="chat_empty">No messages yet. Use this to sort out the pickup, like \"I\'m at the side entrance\".</string>
+    <string name="chat_closed">This reservation is closed, so new messages are turned off.</string>
+    <string name="chat_too_long">Keep messages under %1$d characters.</string>
 </resources>

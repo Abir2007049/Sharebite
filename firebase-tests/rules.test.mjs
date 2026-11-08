@@ -439,6 +439,34 @@ describe('pickup QR code', () => {
   });
 });
 
+// ---- reservation chat ------------------------------------------------------------------------
+
+describe('reservation chat', () => {
+  const msg = (id, sender, text = 'I am at the gate') => ({
+    messageId: id, senderId: sender, senderName: `User ${sender}`, text, createdAt: serverTimestamp(),
+  });
+
+  test('both parties can talk; nobody else can read or write', async () => {
+    await reserve(db('alice'), 'alice', 'RECEIVER', 'free1', 1, 'c1');
+    await assertSucceeds(setDoc(doc(db('alice'), 'reservations', 'c1', 'messages', 'm1'), msg('m1', 'alice')));
+    await assertSucceeds(setDoc(doc(db('provider1'), 'reservations', 'c1', 'messages', 'm2'), msg('m2', 'provider1')));
+    await assertSucceeds(getDocs(collection(db('provider1'), 'reservations', 'c1', 'messages')));
+    await assertFails(getDocs(collection(db('bob'), 'reservations', 'c1', 'messages')));
+    await assertFails(setDoc(doc(db('bob'), 'reservations', 'c1', 'messages', 'm3'), msg('m3', 'bob')));
+  });
+
+  test('messages cannot be spoofed, edited, oversized or sent after the reservation closes', async () => {
+    await reserve(db('alice'), 'alice', 'RECEIVER', 'free1', 1, 'c2');
+    await assertFails(setDoc(doc(db('alice'), 'reservations', 'c2', 'messages', 'm1'), msg('m1', 'provider1')));
+    await assertFails(setDoc(doc(db('alice'), 'reservations', 'c2', 'messages', 'm2'), msg('m2', 'alice', 'x'.repeat(501))));
+    await assertSucceeds(setDoc(doc(db('alice'), 'reservations', 'c2', 'messages', 'm3'), msg('m3', 'alice')));
+    await assertFails(updateDoc(doc(db('alice'), 'reservations', 'c2', 'messages', 'm3'), { text: 'edited' }));
+    await updateDoc(doc(db('provider1'), 'reservations', 'c2'), { status: 'REJECTED', rejectedAt: serverTimestamp() });
+    await assertFails(setDoc(doc(db('alice'), 'reservations', 'c2', 'messages', 'm4'), msg('m4', 'alice')));
+    await assertSucceeds(getDocs(collection(db('alice'), 'reservations', 'c2', 'messages')));
+  });
+});
+
 // ---- notifications -------------------------------------------------------------------------
 
 describe('notifications', () => {

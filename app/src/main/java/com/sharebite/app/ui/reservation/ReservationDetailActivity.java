@@ -158,7 +158,15 @@ public class ReservationDetailActivity extends BaseActivity {
     private void renderHandover(Reservation r, boolean viewerIsProvider, ReservationStatus status) {
         current = r;
         boolean active = status == ReservationStatus.CONFIRMED;
-        ViewUtils.visible(binding.handoverCard, active || r.isPickupVerified());
+        boolean open = active || status == ReservationStatus.PENDING;
+        ViewUtils.visible(binding.handoverCard, open || r.isPickupVerified());
+        ViewUtils.visible(binding.messageButton, open);
+        binding.messageButton.setOnClickListener(v -> startActivity(ChatActivity.intent(this, r.getReservationId())));
+        if (status == ReservationStatus.PENDING) {
+            binding.handoverText.setText(R.string.handover_text_pending);
+            ViewUtils.visible(binding.qrButton, false);
+            return;
+        }
         if (!active) {
             binding.handoverText.setText(R.string.handover_verified);
             ViewUtils.visible(binding.qrButton, false);
