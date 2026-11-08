@@ -38,11 +38,13 @@ public final class ImpactReport {
     public final Map<FoodCategory, Integer> quantityByCategory;
     /** Oldest to newest. */
     public final List<MonthBucket> monthlyActivity;
+    /** Transparent meals-rescued estimate (collected food only). */
+    public final MealEstimate meals;
 
     public ImpactReport(int totalQuantityShared, int completedCollections, int charityCollections,
                         int activeListings, int pendingReservations, int confirmedReservations,
                         int distinctPartners, Map<FoodCategory, Integer> quantityByCategory,
-                        List<MonthBucket> monthlyActivity) {
+                        List<MonthBucket> monthlyActivity, MealEstimate meals) {
         this.totalQuantityShared = totalQuantityShared;
         this.completedCollections = completedCollections;
         this.charityCollections = charityCollections;
@@ -52,6 +54,7 @@ public final class ImpactReport {
         this.distinctPartners = distinctPartners;
         this.quantityByCategory = Collections.unmodifiableMap(quantityByCategory);
         this.monthlyActivity = Collections.unmodifiableList(monthlyActivity);
+        this.meals = meals;
     }
 
     public boolean isEmpty() {

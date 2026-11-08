@@ -47,4 +47,16 @@
     <string name="reminder_title">Pickup closes in %1$d minutes</string>
     <string name="reminder_text">Collect %1$s before the window closes.</string>
     <string name="reminder_text_long">Collect %1$s at %2$s before the window closes. Cancel in the app if you can\'t make it, so someone else can have it.</string>
+
+    <!-- Meals-rescued estimate -->
+    <string name="approx">≈&#160;</string>
+    <string name="meals_label_consumer">meals rescued (estimate)</string>
+    <string name="meals_label_provider">meals shared (estimate)</string>
+    <string name="meals_detail">From %1$d portions and %2$d kg of collected food.</string>
+    <plurals name="meals_unconverted">
+        <item quantity="one">%d collection in pieces, boxes, packs or litres is not converted.</item>
+        <item quantity="other">%d collections in pieces, boxes, packs or litres are not converted.</item>
+    </plurals>
+    <string name="meals_method_title">How meals are estimated</string>
+    <string name="meals_method_body">Only food that was actually collected counts.\n\n• 1 portion = 1 meal.\n• Kilograms are divided by %1$d g per meal, the conversion factor WRAP (UK) uses for redistributed surplus food. Results are rounded down.\n• Pieces, boxes, packs and litres have no known weight, so they are not converted rather than guessed.\n\nThis is an estimate of meals, not a measurement. ShareBite does not calculate carbon or money saved.</string>
 </resources>

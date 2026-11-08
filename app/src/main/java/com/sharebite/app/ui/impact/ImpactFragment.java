@@ -17,6 +17,8 @@ import com.sharebite.app.data.model.User;
 import com.sharebite.app.data.model.UserRole;
 import com.sharebite.app.databinding.FragmentImpactBinding;
 import com.sharebite.app.domain.service.ImpactReport;
+import com.sharebite.app.domain.service.MealEstimate;
+import com.sharebite.app.utils.Motion;
 import com.sharebite.app.ui.BaseTabFragment;
 import com.sharebite.app.ui.home.MainViewModel;
 import com.sharebite.app.ui.widget.BarChartView;
@@ -76,12 +78,13 @@ public class ImpactFragment extends BaseTabFragment {
 
     private void render(ImpactReport r) {
         ViewUtils.visible(binding.progress, false);
-        binding.heroValue.setText(String.valueOf(r.totalQuantityShared));
-        binding.statCompleted.statValue.setText(String.valueOf(r.completedCollections));
-        binding.statCharity.statValue.setText(String.valueOf(r.charityCollections));
-        binding.statPartners.statValue.setText(String.valueOf(r.distinctPartners));
-        binding.statActive.statValue.setText(String.valueOf(role == UserRole.PROVIDER
-                ? r.activeListings : r.pendingReservations + r.confirmedReservations));
+        Motion.countUp(binding.heroValue, r.totalQuantityShared);
+        Motion.countUp(binding.statCompleted.statValue, r.completedCollections);
+        Motion.countUp(binding.statCharity.statValue, r.charityCollections);
+        Motion.countUp(binding.statPartners.statValue, r.distinctPartners);
+        Motion.countUp(binding.statActive.statValue, role == UserRole.PROVIDER
+                ? r.activeListings : r.pendingReservations + r.confirmedReservations);
+        renderMeals(r.meals);
 
         List<BarChartView.Bar> bars = new ArrayList<>();
         for (ImpactReport.MonthBucket m : r.monthlyActivity) bars.add(new BarChartView.Bar(m.label, m.quantity));
@@ -102,6 +105,23 @@ public class ImpactFragment extends BaseTabFragment {
         ViewUtils.visible(binding.categoryEmpty, r.quantityByCategory.isEmpty());
         ViewUtils.visible(binding.emptyBanner, r.isEmpty());
         binding.emptyBanner.setText(role == UserRole.PROVIDER ? R.string.impact_empty_provider : R.string.impact_empty_consumer);
+    }
+
+    /** "About N meals" card, with the method and what was left out spelled out. */
+    private void renderMeals(MealEstimate m) {
+        Motion.countUp(binding.mealValue, m.meals());
+        binding.mealLabel.setText(role == UserRole.PROVIDER ? R.string.meals_label_provider : R.string.meals_label_consumer);
+        StringBuilder detail = new StringBuilder(getString(R.string.meals_detail, m.portions, m.kilograms));
+        if (m.unconvertedCollections > 0) {
+            detail.append(" ").append(getResources().getQuantityString(R.plurals.meals_unconverted,
+                    m.unconvertedCollections, m.unconvertedCollections));
+        }
+        binding.mealDetail.setText(detail);
+        binding.mealInfo.setOnClickListener(v -> new com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.meals_method_title)
+                .setMessage(getString(R.string.meals_method_body, (int) MealEstimate.GRAMS_PER_MEAL))
+                .setPositiveButton(R.string.done, null)
+                .show());
     }
 
     @Override

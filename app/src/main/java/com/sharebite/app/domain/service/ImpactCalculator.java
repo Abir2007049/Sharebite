@@ -101,7 +101,7 @@ public final class ImpactCalculator {
         }
 
         return new ImpactReport(total, completed, charity, active, pending, confirmed, partners.size(),
-                sortByValueDesc(byCategory), months);
+                sortByValueDesc(byCategory), months, MealEstimate.of(reservations));
     }
 
     private static Map<FoodCategory, Integer> sortByValueDesc(Map<FoodCategory, Integer> in) {
