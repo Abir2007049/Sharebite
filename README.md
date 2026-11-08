@@ -55,16 +55,21 @@ There are no delivery riders, carts or payment gateways. The workflow is list �
 - The status machine is `PENDING → CONFIRMED → COLLECTED`, with `PENDING → REJECTED` and `PENDING/CONFIRMED → CANCELLED`. Either party can confirm the hand-over, and who did is recorded.
 - Stock is returned exactly when a reservation is declined or cancelled. Withdrawing a listing declines or cancels its open reservations and notifies those people.
 - The reservation detail screen shows a status timeline and pickup information.
+- **QR-verified hand-over.** Each reservation gets a one-time 128-bit pickup code, created in the same transaction and stored in a sub-document only the receiver can read. The receiver shows it as a QR code, and the provider scans it to mark the food collected. The rules accept a *verified* collection only when the scanned code matches, so a provider can't claim one without the receiver present. The manual "mark collected" stays as a fallback.
+- **Private chat** per reservation ("I'm at the side gate"). Only the two parties can read or write. Messages can't be edited or spoofed, and writing closes when the reservation does.
+- **Pickup reminders.** Receivers get a local notification 30 minutes before a confirmed pickup window closes (WorkManager, no server). The reminder re-checks the reservation first, so a cancelled or collected pickup doesn't remind.
 - In-app notifications are written in the same transaction as the change they describe.
 
 ### Impact dashboard
 - Shows units shared or rescued, completed collections, charity collections, people/charities helped (or providers supported), and active listings or reservations.
 - Includes a monthly activity chart (custom Canvas view, last six months) and a breakdown by category.
 - **Only `COLLECTED` reservations count.** No CO₂ or other environmental estimates are shown, because the app has no defensible model for them (this is stated in the UI).
+- **Meals estimate, with its method shown in the app.** A portion counts as one meal. Kilograms are divided by 420 g per meal (the WRAP conversion factor for redistributed surplus food), rounded down. Pieces, boxes, packs and litres are reported as *not converted*, not guessed.
 
 ### Food safety
 - Preparation time, pickup deadline, storage conditions and allergens are mandatory, both in the form validation and in the security rules.
 - A prominent allergen warning appears on listings, along with disclaimers that ShareBite does not inspect or certify food, and a food-safety guidelines page in Profile.
+- **Personal allergen profile.** Users choose the allergens they avoid from the 14 major allergens. Listings whose declaration mentions them are flagged on cards and the detail screen (synonyms such as ghee for milk are recognised, and negations such as "nut-free" are ignored). The profile is kept **on the device only**, because allergy information is health data and Firestore profiles are readable by other signed-in users.
 - Weather near the pickup point (Open-Meteo) adds handling advice, e.g. bring a cool box when it's hot and the food is perishable.
 
 ---
@@ -248,11 +253,11 @@ Nominatim's usage policy asks for an identifying `User-Agent` (sent as `ShareBit
 ## Testing
 
 ```bash
-./gradlew testDebugUnitTest        # 53 JVM unit tests
+./gradlew testDebugUnitTest        # 65 JVM unit tests
 ./gradlew lintDebug                # Android lint (0 errors)
 
 cd firebase-tests && npm install
-npm test                           # 35 security-rules tests on the Firestore emulator
+npm test                           # 42 security-rules tests on the Firestore emulator
 ```
 
 - **JVM unit tests** (`app/src/test`) cover:
@@ -263,8 +268,9 @@ npm test                           # 35 security-rules tests on the Firestore em
   - filtering/sorting/distance (no fabricated distances);
   - impact aggregation (collected-only, monthly buckets);
   - Gson parsing of both APIs, including malformed bodies;
-  - the reservation action policy and image down-sampling.
-- **Rules tests** (`firebase-tests/rules.test.mjs`) replay the app's real write shapes: the reserve transaction, cancel with stock release, provider decline, listing withdrawal, collection by either party, and charity verification. They also try tampered writes: overselling, self-verification, skipping states, cancelling someone else's reservation, and spoofed notifications.
+  - the reservation action policy and image down-sampling;
+  - allergen matching, the meals estimate, pickup-code generation/parsing and reminder timing.
+- **Rules tests** (`firebase-tests/rules.test.mjs`) replay the app's real write shapes: the reserve transaction, cancel with stock release, provider decline, listing withdrawal, collection by either party, and charity verification. They also try tampered writes: overselling, self-verification, skipping states, cancelling someone else's reservation, and spoofed notifications. Newer suites cover guest browsing, the private pickup code (only the receiver reads it, it can't be replaced, and verification needs the matching code), and chat access.
 
 ---
 
@@ -276,7 +282,9 @@ No screenshots yet. The app hasn't been run on a device in the environment where
 
 ## Known limitations
 
-- **Not yet run on a device or emulator.** It was built on a machine without enough free memory for an Android emulator. Verification so far: a successful `assembleDebug`, lint, 53 unit tests and 33 rules tests on the Firestore emulator. A manual pass on a device is still the next step.
+- **Device testing is limited.** The app has been installed and launched on a physical Android phone against a real Firebase project (seeded demo data), but the newer features (allergen profile, reminders, QR hand-over, chat, motion) have not been exercised by hand yet. Automated checks: `assembleDebug`, lint (0 errors), 65 unit tests and 42 rules tests on the Firestore emulator.
+- **Reminders are local.** They are scheduled on the receiver's phone, fire within a few minutes of the target time (Android may batch background work), and need notification permission on Android 13+.
+- **Allergen warnings depend on the provider's declaration.** They can't detect undeclared allergens, and the app says so.
 - **No Cloud Functions.** Expiry is enforced by the rules (no reservations after the deadline) and shown by the client (an open listing past its deadline displays as *Expired*). The stored status changes to `EXPIRED` when the provider next opens the app.
 - **In-app notifications only.** There is no push (FCM), so notifications appear while the app is open.
 - **Charity review is manual** (console or admin claim). There is no in-app reviewer UI.
