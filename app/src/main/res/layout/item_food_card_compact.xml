@@ -57,6 +57,20 @@
                 app:drawableStartCompat="@drawable/ic_restaurant" />
 
             <TextView
+                android:id="@+id/allergenAlert"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:drawablePadding="@dimen/space_xs"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.ShareBite.Caption"
+                android:textColor="@color/error_red"
+                android:visibility="gone"
+                app:drawableStartCompat="@drawable/ic_warning"
+                app:drawableTint="@color/error_red" />
+
+            <TextView
                 android:id="@+id/timeLeft"
                 style="@style/ShareBite.Badge"
                 android:layout_marginTop="@dimen/space_s"

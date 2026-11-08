@@ -116,6 +116,11 @@ public abstract class ConsumerHomeFragment extends BaseTabFragment {
             rebuild();
         });
         homeViewModel.feed().observe(getViewLifecycleOwner(), this::renderFeed);
+        com.sharebite.app.utils.ServiceLocator.get().allergens().changes().observe(getViewLifecycleOwner(), avoided -> {
+            for (FoodCardAdapter a : new FoodCardAdapter[]{nearbyAdapter, recentAdapter, freeAdapter, discountedAdapter, charityAdapter}) {
+                a.setAvoidedAllergens(avoided);
+            }
+        });
         com.sharebite.app.utils.ServiceLocator.get().session().currentUser().observe(getViewLifecycleOwner(), u -> {
             if (u != null) {
                 onUserChanged(u);

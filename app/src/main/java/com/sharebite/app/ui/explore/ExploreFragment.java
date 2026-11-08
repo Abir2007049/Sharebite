@@ -73,6 +73,8 @@ public class ExploreFragment extends BaseTabFragment {
         adapter = new FoodCardAdapter(FoodCardAdapter.Style.FULL, this::openListing);
         binding.results.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.results.setAdapter(adapter);
+        com.sharebite.app.utils.ServiceLocator.get().allergens().changes()
+                .observe(getViewLifecycleOwner(), adapter::setAvoidedAllergens);
         buildChips();
 
         binding.searchInput.getEditText().addTextChangedListener(new TextWatcher() {

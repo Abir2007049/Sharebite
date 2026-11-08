@@ -40,6 +40,11 @@ public class ProfileFragment extends BaseTabFragment {
         binding.menuEditProfile.setOnClickListener(v -> startActivity(new Intent(requireContext(), EditProfileActivity.class)));
         binding.menuNotifications.setOnClickListener(v -> startActivity(new Intent(requireContext(), NotificationsActivity.class)));
         binding.menuVerification.setOnClickListener(v -> startActivity(new Intent(requireContext(), CharityVerificationActivity.class)));
+        binding.menuAllergens.setOnClickListener(v -> AllergenProfileDialog.show(requireContext(),
+                () -> showMessage(getString(R.string.my_allergens_saved))));
+        ServiceLocator.get().allergens().changes().observe(getViewLifecycleOwner(), avoided ->
+                binding.menuAllergens.setText(avoided.isEmpty() ? getString(R.string.my_allergens)
+                        : getString(R.string.my_allergens_count, avoided.size())));
         binding.menuSafety.setOnClickListener(v -> new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.food_safety_guidelines)
                 .setMessage(R.string.food_safety_guidelines_body)

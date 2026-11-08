@@ -45,6 +45,7 @@ public final class ServiceLocator {
     private final GeocodingService geocodingService;
     private final WeatherService weatherService;
     private final SessionManager sessionManager;
+    private final AllergenPreferences allergenPreferences;
 
     private ServiceLocator(Context context) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -60,6 +61,7 @@ public final class ServiceLocator {
         geocodingService = new NominatimGeocodingService(http);
         weatherService = new OpenMeteoWeatherService(http);
         sessionManager = new SessionManager(FirebaseAuth.getInstance(), userRepository);
+        allergenPreferences = new AllergenPreferences(context);
     }
 
     /** True when Firebase initialised (from google-services.json or in emulator mode). */
@@ -91,4 +93,5 @@ public final class ServiceLocator {
     public GeocodingService geocoding() { return geocodingService; }
     public WeatherService weather() { return weatherService; }
     public SessionManager session() { return sessionManager; }
+    public AllergenPreferences allergens() { return allergenPreferences; }
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Strings for the features added after the first release (allergen profile, reminders, impact
+     estimate, QR pickup, chat). -->
+<resources>
+    <!-- Allergen profile -->
+    <string name="allergen_gluten">Gluten (wheat, barley, rye)</string>
+    <string name="allergen_milk">Milk and dairy</string>
+    <string name="allergen_eggs">Eggs</string>
+    <string name="allergen_peanuts">Peanuts</string>
+    <string name="allergen_tree_nuts">Tree nuts</string>
+    <string name="allergen_soy">Soy</string>
+    <string name="allergen_fish">Fish</string>
+    <string name="allergen_shellfish">Shellfish (crustaceans, molluscs)</string>
+    <string name="allergen_sesame">Sesame</string>
+    <string name="allergen_mustard">Mustard</string>
+    <string name="allergen_celery">Celery</string>
+    <string name="allergen_sulphites">Sulphites</string>
+    <string name="allergen_lupin">Lupin</string>
+    <string name="allergen_short_gluten">gluten</string>
+    <string name="allergen_short_milk">milk</string>
+    <string name="allergen_short_eggs">eggs</string>
+    <string name="allergen_short_peanuts">peanuts</string>
+    <string name="allergen_short_tree_nuts">tree nuts</string>
+    <string name="allergen_short_soy">soy</string>
+    <string name="allergen_short_fish">fish</string>
+    <string name="allergen_short_shellfish">shellfish</string>
+    <string name="allergen_short_sesame">sesame</string>
+    <string name="allergen_short_mustard">mustard</string>
+    <string name="allergen_short_celery">celery</string>
+    <string name="allergen_short_sulphites">sulphites</string>
+    <string name="allergen_short_lupin">lupin</string>
+    <string name="my_allergens">My allergens</string>
+    <string name="my_allergens_count">My allergens (%1$d)</string>
+    <string name="my_allergens_title">Allergens you avoid</string>
+    <string name="my_allergens_note">We\'ll flag listings whose declared allergens include these. This list stays on this phone only.</string>
+    <string name="my_allergens_saved">Allergen profile saved.</string>
+    <string name="list_and_format">%1$s and %2$s</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="allergen_conflict_card">Contains %1$s, which you avoid</string>
+    <string name="allergen_conflict_title">Not for you: contains %1$s</string>
+    <string name="allergen_conflict_body">Based on the provider\'s declaration. Undeclared traces are possible, so ask the provider if you are unsure.</string>
+</resources>

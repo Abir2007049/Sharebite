@@ -27,6 +27,7 @@ public class GuestAccountFragment extends Fragment {
         binding = FragmentGuestAccountBinding.inflate(inflater, container, false);
         binding.registerButton.setOnClickListener(v -> startActivity(new Intent(requireContext(), RegisterActivity.class)));
         binding.loginButton.setOnClickListener(v -> startActivity(new Intent(requireContext(), LoginActivity.class)));
+        binding.allergensLink.setOnClickListener(v -> AllergenProfileDialog.show(requireContext(), null));
         binding.safetyLink.setOnClickListener(v -> new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.food_safety_guidelines)
                 .setMessage(R.string.food_safety_guidelines_body)

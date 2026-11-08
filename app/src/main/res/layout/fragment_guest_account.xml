@@ -49,6 +49,17 @@
             android:text="@string/log_in" />
 
         <TextView
+            android:id="@+id/allergensLink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_l"
+            android:minHeight="@dimen/touch_target"
+            android:gravity="center_vertical"
+            android:text="@string/my_allergens"
+            android:textAppearance="@style/TextAppearance.ShareBite.Body"
+            android:textColor="@color/forest_green" />
+
+        <TextView
             android:id="@+id/safetyLink"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

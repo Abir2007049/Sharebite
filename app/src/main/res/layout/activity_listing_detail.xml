@@ -114,6 +114,48 @@
                     android:textAppearance="@style/TextAppearance.ShareBite.BodyLarge" />
 
                 <!-- Allergen warning (prominent when allergens are declared). -->
+                <!-- Personal allergen profile conflict (allergens the user avoids). -->
+                <LinearLayout
+                    android:id="@+id/myAllergenAlert"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_l"
+                    android:background="@drawable/bg_rounded_panel"
+                    android:backgroundTint="@color/error_bg"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/space_m"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_warning"
+                        app:tint="@color/error_red" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_m"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/myAllergenTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.ShareBite.Title"
+                            android:textColor="@color/error_red" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_xxs"
+                            android:text="@string/allergen_conflict_body"
+                            android:textAppearance="@style/TextAppearance.ShareBite.Caption" />
+                    </LinearLayout>
+                </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/allergenBanner"
                     android:layout_width="match_parent"

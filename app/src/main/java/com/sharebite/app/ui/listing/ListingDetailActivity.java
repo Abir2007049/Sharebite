@@ -177,6 +177,14 @@ public class ListingDetailActivity extends BaseActivity implements ReserveBottom
             ViewUtils.visible(binding.discount, false);
         }
 
+        java.util.Set<com.sharebite.app.data.model.Allergen> mine = com.sharebite.app.domain.service.AllergenMatcher
+                .conflicts(l.getAllergens(), ServiceLocator.get().allergens().avoided());
+        ViewUtils.visible(binding.myAllergenAlert, !mine.isEmpty());
+        if (!mine.isEmpty()) {
+            binding.myAllergenTitle.setText(getString(R.string.allergen_conflict_title,
+                    com.sharebite.app.utils.AllergenText.join(this, mine)));
+        }
+
         boolean allergens = l.hasDeclaredAllergens();
         ViewUtils.visible(binding.allergenBanner, allergens);
         binding.allergenText.setText(l.getAllergens());

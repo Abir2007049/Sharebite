@@ -138,6 +138,12 @@
                     app:drawableStartCompat="@drawable/ic_shield" />
 
                 <TextView
+                    android:id="@+id/menuAllergens"
+                    style="@style/ShareBite.MenuRow"
+                    android:text="@string/my_allergens"
+                    app:drawableStartCompat="@drawable/ic_warning" />
+
+                <TextView
                     android:id="@+id/menuSafety"
                     style="@style/ShareBite.MenuRow"
                     android:text="@string/food_safety_guidelines"

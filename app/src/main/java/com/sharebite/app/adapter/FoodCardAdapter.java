@@ -14,15 +14,20 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sharebite.app.R;
+import com.sharebite.app.data.model.Allergen;
 import com.sharebite.app.data.model.DistributionType;
 import com.sharebite.app.data.model.FoodListing;
+import com.sharebite.app.domain.service.AllergenMatcher;
 import com.sharebite.app.domain.service.ListingItem;
+import com.sharebite.app.utils.AllergenText;
 import com.sharebite.app.utils.Formatters;
 import com.sharebite.app.utils.ImageLoader;
 import com.sharebite.app.utils.ViewUtils;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 
 /** Food listing cards. {@link Style#FULL} for vertical lists, {@link Style#COMPACT} for carousels. */
 public class FoodCardAdapter extends ListAdapter<ListingItem, FoodCardAdapter.Holder> {
@@ -35,11 +40,19 @@ public class FoodCardAdapter extends ListAdapter<ListingItem, FoodCardAdapter.Ho
 
     private final Style style;
     private final OnListingClick listener;
+    private Set<Allergen> avoidedAllergens = Collections.emptySet();
 
     public FoodCardAdapter(@NonNull Style style, @NonNull OnListingClick listener) {
         super(DIFF);
         this.style = style;
         this.listener = listener;
+    }
+
+    /** The user's allergen profile; cards declaring any of these get a warning. */
+    public void setAvoidedAllergens(@NonNull Set<Allergen> avoided) {
+        if (avoided.equals(avoidedAllergens)) return;
+        avoidedAllergens = avoided;
+        notifyItemRangeChanged(0, getItemCount());
     }
 
     @NonNull
@@ -73,9 +86,25 @@ public class FoodCardAdapter extends ListAdapter<ListingItem, FoodCardAdapter.Ho
             ViewUtils.visible(h.distance, item.distanceKm != null);
             if (item.distanceKm != null) h.distance.setText(Formatters.distance(c, item.distanceKm));
         }
+        Set<Allergen> conflicts = AllergenMatcher.conflicts(l.getAllergens(), avoidedAllergens);
+        String conflictText = conflicts.isEmpty() ? null
+                : c.getString(R.string.allergen_conflict_card, AllergenText.join(c, conflicts));
         if (h.allergens != null) {
-            ViewUtils.visible(h.allergens, l.hasDeclaredAllergens());
-            if (l.hasDeclaredAllergens()) h.allergens.setText(c.getString(R.string.contains_format, l.getAllergens()));
+            boolean show = conflictText != null || l.hasDeclaredAllergens();
+            ViewUtils.visible(h.allergens, show);
+            if (show) {
+                boolean conflict = conflictText != null;
+                h.allergens.setText(conflict ? conflictText : c.getString(R.string.contains_format, l.getAllergens()));
+                int fg = c.getColor(conflict ? R.color.error_red : R.color.warning_amber);
+                h.allergens.setTextColor(fg);
+                h.allergens.setBackgroundTintList(c.getColorStateList(conflict ? R.color.error_bg : R.color.warning_bg));
+                androidx.core.widget.TextViewCompat.setCompoundDrawableTintList(h.allergens,
+                        android.content.res.ColorStateList.valueOf(fg));
+            }
+        }
+        if (h.allergenAlert != null) {
+            ViewUtils.visible(h.allergenAlert, conflictText != null);
+            if (conflictText != null) h.allergenAlert.setText(conflictText);
         }
         if (h.eligibility != null) {
             boolean showNote = !item.reservableByUser && l.getDistributionType() == DistributionType.CHARITY;
@@ -102,6 +131,7 @@ public class FoodCardAdapter extends ListAdapter<ListingItem, FoodCardAdapter.Ho
         final ImageView image;
         final TextView title, badge, timeLeft, quantity;
         final TextView provider, price, originalPrice, distance, allergens, eligibility; // FULL only (nullable)
+        final TextView allergenAlert; // COMPACT only (nullable)
 
         Holder(@NonNull View v) {
             super(v);
@@ -116,6 +146,7 @@ public class FoodCardAdapter extends ListAdapter<ListingItem, FoodCardAdapter.Ho
             distance = v.findViewById(R.id.distance);
             allergens = v.findViewById(R.id.allergenWarning);
             eligibility = v.findViewById(R.id.eligibilityNote);
+            allergenAlert = v.findViewById(R.id.allergenAlert);
         }
     }
 
