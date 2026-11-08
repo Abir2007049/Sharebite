@@ -99,6 +99,63 @@
                 android:layout_marginTop="@dimen/space_m"
                 android:textAppearance="@style/TextAppearance.ShareBite.BodyLarge" />
 
+            <!-- Pickup hand-over: QR code (receiver shows it, provider scans it) and messages. -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/handoverCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_l"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_l">
+
+                    <TextView
+                        android:id="@+id/handoverTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/handover_title"
+                        android:textAppearance="@style/TextAppearance.ShareBite.Title" />
+
+                    <TextView
+                        android:id="@+id/handoverText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_xxs"
+                        android:textAppearance="@style/TextAppearance.ShareBite.Body" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_m"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/messageButton"
+                            style="@style/Widget.ShareBite.Button.Tonal"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/space_s"
+                            android:layout_weight="1"
+                            android:text="@string/messages"
+                            android:visibility="gone"
+                            app:icon="@drawable/ic_chat" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/qrButton"
+                            style="@style/Widget.ShareBite.Button.Tonal"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:visibility="gone"
+                            app:icon="@drawable/ic_qr" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

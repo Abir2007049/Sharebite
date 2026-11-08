@@ -94,8 +94,13 @@ async function reserve(fs, uid, role, listingId, quantity, resId, overrides = {}
     });
     tx.set(doc(fs, 'notifications', `n-${resId}`),
       notificationDoc(`n-${resId}`, l.providerId, uid, 'RESERVATION_REQUEST', listingId, resId));
+    if (overrides.pickupCode !== undefined) {
+      tx.set(doc(fs, 'reservations', resId, 'private', 'pickup'), { code: overrides.pickupCode });
+    }
   });
 }
+
+const CODE = '0123456789abcdef0123456789abcdef';
 
 // ---- lifecycle ---------------------------------------------------------------------------
 
@@ -387,6 +392,50 @@ describe('reservations', () => {
       tx.update(doc(fs, 'reservations', 'r18'), { status: 'CANCELLED', cancelledAt: Timestamp.now() });
       tx.update(doc(fs, 'foodListings', 'free1'), { availableQuantity: 10, lastReservationId: 'r18', updatedAt: serverTimestamp() });
     }));
+  });
+});
+
+// ---- QR pickup hand-over -------------------------------------------------------------------
+
+describe('pickup QR code', () => {
+  async function confirmed(resId) {
+    await reserve(db('alice'), 'alice', 'RECEIVER', 'free1', 2, resId, { pickupCode: CODE });
+    await updateDoc(doc(db('provider1'), 'reservations', resId), { status: 'CONFIRMED', confirmedAt: serverTimestamp() });
+  }
+
+  test('the receiver creates the code with the reservation and only they can read it', async () => {
+    await confirmed('q1');
+    await assertSucceeds(getDoc(doc(db('alice'), 'reservations', 'q1', 'private', 'pickup')));
+    await assertFails(getDoc(doc(db('provider1'), 'reservations', 'q1', 'private', 'pickup')));
+    await assertFails(getDoc(doc(db('bob'), 'reservations', 'q1', 'private', 'pickup')));
+  });
+
+  test('the code cannot be added or replaced after the reservation exists', async () => {
+    await confirmed('q2');
+    await assertFails(setDoc(doc(db('alice'), 'reservations', 'q2', 'private', 'pickup'), { code: 'f'.repeat(32) }));
+    await reserve(db('alice'), 'alice', 'RECEIVER', 'free1', 1, 'q3');
+    await assertFails(setDoc(doc(db('alice'), 'reservations', 'q3', 'private', 'pickup'), { code: CODE }));
+  });
+
+  test('the provider can mark a verified hand-over only with the matching code', async () => {
+    await confirmed('q4');
+    const verified = (code) => ({
+      status: 'COLLECTED', collectedAt: serverTimestamp(), collectionConfirmedBy: 'PROVIDER',
+      pickupVerified: true, pickupCode: code,
+    });
+    await assertFails(updateDoc(doc(db('provider1'), 'reservations', 'q4'), verified('f'.repeat(32))));
+    await assertSucceeds(updateDoc(doc(db('provider1'), 'reservations', 'q4'), verified(CODE)));
+  });
+
+  test('a reservation cannot be created as already verified', async () => {
+    await assertFails(reserve(db('alice'), 'alice', 'RECEIVER', 'free1', 1, 'q5',
+      { reservation: { pickupVerified: true, pickupCode: CODE } }));
+  });
+
+  test('the plain (unverified) provider collection still works', async () => {
+    await confirmed('q6');
+    await assertSucceeds(updateDoc(doc(db('provider1'), 'reservations', 'q6'),
+      { status: 'COLLECTED', collectedAt: serverTimestamp(), collectionConfirmedBy: 'PROVIDER' }));
   });
 });
 

@@ -85,6 +85,9 @@ public class FirestoreReservationRepository extends BaseFirestoreRepository<Rese
 
             Reservation reservation = Reservation.create(reservationRef.getId(), listing, receiver, quantity, now);
             tx.set(reservationRef, reservation);
+            // One-time pickup code, readable only by the receiver (see firestore.rules).
+            tx.set(pickupCodeRef(reservationRef.getId()),
+                    java.util.Collections.singletonMap("code", com.sharebite.app.domain.service.PickupCode.generate()));
 
             Map<String, Object> listingUpdate = new HashMap<>();
             listingUpdate.put("availableQuantity", listing.getAvailableQuantity());
@@ -155,6 +158,42 @@ public class FirestoreReservationRepository extends BaseFirestoreRepository<Rese
             // which requires lastReservationId to point at this reservation.
             releaseQuantity(tx, lRef, listingSnap, current, byReceiver);
             notifications.write(tx, notifications.forEvent(NotificationType.RESERVATION_CANCELLED, current, actor.getUid()));
+            return null;
+        }).addOnSuccessListener(v -> callback.onSuccess(null)).addOnFailureListener(callback::onError);
+    }
+
+    private DocumentReference pickupCodeRef(String reservationId) {
+        return collection.document(reservationId).collection("private").document("pickup");
+    }
+
+    @Override
+    public void getPickupCode(String reservationId, ResultCallback<String> callback) {
+        pickupCodeRef(reservationId).get()
+                .addOnSuccessListener(snap -> callback.onSuccess(snap.exists() ? snap.getString("code") : null))
+                .addOnFailureListener(callback::onError);
+    }
+
+    @Override
+    public void markCollectedWithCode(Reservation reservation, User provider, String code, ResultCallback<Void> callback) {
+        DocumentReference ref = collection.document(reservation.getReservationId());
+        db.runTransaction((Transaction.Function<Void>) tx -> {
+            DocumentSnapshot snap = tx.get(ref);
+            Reservation current = snap.toObject(Reservation.class);
+            if (current == null) throw TransactionAbort.of(Reason.NOT_FOUND, "Reservation not found.");
+            current.assignDocumentId(snap.getId());
+            if (!provider.getUid().equals(current.getProviderId())) {
+                throw TransactionAbort.of(Reason.NOT_PERMITTED, "Only the provider can scan the pickup code.");
+            }
+            Timestamp now = Timestamp.now();
+            transition(current, ReservationStatus.COLLECTED, now, Reservation.CollectionConfirmer.PROVIDER);
+            Map<String, Object> update = new HashMap<>();
+            update.put("status", ReservationStatus.COLLECTED.name());
+            update.put("collectedAt", now);
+            update.put("collectionConfirmedBy", Reservation.CollectionConfirmer.PROVIDER.name());
+            update.put("pickupVerified", true);
+            update.put("pickupCode", code);
+            tx.update(ref, update);
+            notifications.write(tx, notifications.forEvent(NotificationType.COLLECTION_COMPLETED, current, provider.getUid()));
             return null;
         }).addOnSuccessListener(v -> callback.onSuccess(null)).addOnFailureListener(callback::onError);
     }

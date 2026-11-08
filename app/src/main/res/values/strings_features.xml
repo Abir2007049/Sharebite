@@ -59,4 +59,23 @@
     </plurals>
     <string name="meals_method_title">How meals are estimated</string>
     <string name="meals_method_body">Only food that was actually collected counts.\n\n• 1 portion = 1 meal.\n• Kilograms are divided by %1$d g per meal, the conversion factor WRAP (UK) uses for redistributed surplus food. Results are rounded down.\n• Pieces, boxes, packs and litres have no known weight, so they are not converted rather than guessed.\n\nThis is an estimate of meals, not a measurement. ShareBite does not calculate carbon or money saved.</string>
+
+    <!-- QR pickup hand-over -->
+    <string name="handover_title">Pickup hand-over</string>
+    <string name="handover_text_receiver">At the pickup point, show your QR code. The provider scans it to confirm you collected the food.</string>
+    <string name="handover_text_provider">Scan the collector\'s QR code when you hand the food over. It confirms the pickup and verifies it was really them.</string>
+    <string name="handover_verified">Hand-over verified with the collector\'s QR code.</string>
+    <string name="show_pickup_qr">Show QR code</string>
+    <string name="scan_pickup_qr">Scan QR code</string>
+    <string name="pickup_qr_title">Your pickup code</string>
+    <string name="pickup_qr_message">Show this to the provider. Don\'t share a screenshot of it with anyone else.</string>
+    <string name="pickup_qr_description">QR code for this pickup</string>
+    <string name="qr_unavailable">This reservation was made before QR codes were added. The provider can still mark it collected.</string>
+    <string name="scan_prompt">Point the camera at the collector\'s ShareBite QR code</string>
+    <string name="scan_not_sharebite">That isn\'t a ShareBite pickup code.</string>
+    <string name="scan_other_reservation">That code belongs to a different reservation.</string>
+    <string name="scan_mismatch">That QR code doesn\'t match this reservation. Ask the collector to open it again in their app.</string>
+    <string name="scan_verified">Pickup verified and marked as collected.</string>
+    <string name="timeline_collected_qr">Collected (verified by QR code)</string>
+    <string name="messages">Messages</string>
 </resources>

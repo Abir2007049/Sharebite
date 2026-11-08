@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
@@ -145,6 +146,112 @@ public class ReservationDetailActivity extends BaseActivity {
 
         renderTimeline(r);
         renderActions(r, viewerIsProvider);
+        renderHandover(r, viewerIsProvider, status);
+    }
+
+    // ---- QR hand-over ---------------------------------------------------------------------
+
+    private Reservation current;
+    private final androidx.activity.result.ActivityResultLauncher<com.journeyapps.barcodescanner.ScanOptions> scanner =
+            registerForActivityResult(new com.journeyapps.barcodescanner.ScanContract(), result -> onScanned(result.getContents()));
+
+    private void renderHandover(Reservation r, boolean viewerIsProvider, ReservationStatus status) {
+        current = r;
+        boolean active = status == ReservationStatus.CONFIRMED;
+        ViewUtils.visible(binding.handoverCard, active || r.isPickupVerified());
+        if (!active) {
+            binding.handoverText.setText(R.string.handover_verified);
+            ViewUtils.visible(binding.qrButton, false);
+            return;
+        }
+        binding.handoverText.setText(viewerIsProvider ? R.string.handover_text_provider : R.string.handover_text_receiver);
+        ViewUtils.visible(binding.qrButton, true);
+        binding.qrButton.setText(viewerIsProvider ? R.string.scan_pickup_qr : R.string.show_pickup_qr);
+        binding.qrButton.setOnClickListener(v -> {
+            if (viewerIsProvider) startScan();
+            else showQr(r);
+        });
+    }
+
+    private void showQr(Reservation r) {
+        ViewUtils.visible(binding.progress, true);
+        ServiceLocator.get().reservations().getPickupCode(r.getReservationId(), new ResultCallback<String>() {
+            @Override
+            public void onSuccess(String code) {
+                ViewUtils.visible(binding.progress, false);
+                if (code == null) {
+                    showMessage(getString(R.string.qr_unavailable));
+                    return;
+                }
+                int size = (int) (getResources().getDisplayMetrics().density * 240);
+                android.graphics.Bitmap bmp = com.sharebite.app.utils.QrCodes.render(
+                        com.sharebite.app.domain.service.PickupCode.payload(r.getReservationId(), code),
+                        size, ContextCompat.getColor(ReservationDetailActivity.this, R.color.charcoal));
+                if (bmp == null) {
+                    showMessage(getString(R.string.qr_unavailable));
+                    return;
+                }
+                ImageView image = new ImageView(ReservationDetailActivity.this);
+                image.setImageBitmap(bmp);
+                image.setContentDescription(getString(R.string.pickup_qr_description));
+                int pad = (int) (getResources().getDisplayMetrics().density * 16);
+                image.setPadding(pad, pad, pad, 0);
+                new com.google.android.material.dialog.MaterialAlertDialogBuilder(ReservationDetailActivity.this)
+                        .setTitle(R.string.pickup_qr_title)
+                        .setMessage(R.string.pickup_qr_message)
+                        .setView(image)
+                        .setPositiveButton(R.string.done, null)
+                        .show();
+            }
+
+            @Override
+            public void onError(@NonNull Exception error) {
+                ViewUtils.visible(binding.progress, false);
+                showMessage(com.sharebite.app.utils.ErrorMessages.from(error));
+            }
+        });
+    }
+
+    private void startScan() {
+        com.journeyapps.barcodescanner.ScanOptions options = new com.journeyapps.barcodescanner.ScanOptions()
+                .setDesiredBarcodeFormats(com.journeyapps.barcodescanner.ScanOptions.QR_CODE)
+                .setPrompt(getString(R.string.scan_prompt))
+                .setBeepEnabled(false)
+                .setOrientationLocked(false);
+        scanner.launch(options);
+    }
+
+    private void onScanned(@Nullable String contents) {
+        if (contents == null || current == null) return; // cancelled
+        com.sharebite.app.domain.service.PickupCode.Scanned scanned = com.sharebite.app.domain.service.PickupCode.parse(contents);
+        if (scanned == null) {
+            showMessage(getString(R.string.scan_not_sharebite));
+            return;
+        }
+        if (!scanned.reservationId.equals(current.getReservationId())) {
+            showMessage(getString(R.string.scan_other_reservation));
+            return;
+        }
+        ViewUtils.visible(binding.progress, true);
+        binding.qrButton.setEnabled(false);
+        ServiceLocator.get().reservations().markCollectedWithCode(current, me, scanned.code, new ResultCallback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                ViewUtils.visible(binding.progress, false);
+                binding.qrButton.setEnabled(true);
+                showMessage(getString(R.string.scan_verified));
+            }
+
+            @Override
+            public void onError(@NonNull Exception error) {
+                ViewUtils.visible(binding.progress, false);
+                binding.qrButton.setEnabled(true);
+                boolean denied = error instanceof com.google.firebase.firestore.FirebaseFirestoreException
+                        && ((com.google.firebase.firestore.FirebaseFirestoreException) error).getCode()
+                        == com.google.firebase.firestore.FirebaseFirestoreException.Code.PERMISSION_DENIED;
+                showMessage(denied ? getString(R.string.scan_mismatch) : com.sharebite.app.utils.ErrorMessages.from(error));
+            }
+        });
     }
 
     @StringRes
@@ -170,7 +277,8 @@ public class ReservationDetailActivity extends BaseActivity {
             addStep(R.string.timeline_cancelled, r.getCancelledAt(), true);
             return;
         }
-        addStep(r.getCollectionConfirmedBy() == Reservation.CollectionConfirmer.RECEIVER
+        addStep(r.isPickupVerified() ? R.string.timeline_collected_qr
+                : r.getCollectionConfirmedBy() == Reservation.CollectionConfirmer.RECEIVER
                 ? R.string.timeline_collected_receiver : R.string.timeline_collected, r.getCollectedAt(), r.getCollectedAt() != null);
     }
 

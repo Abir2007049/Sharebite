@@ -23,6 +23,15 @@ public interface ReservationRepository extends Repository<Reservation, String> {
     /** Either party confirms the hand-over; recorded with who confirmed it. */
     void markCollected(Reservation reservation, User actor, ResultCallback<Void> callback);
 
+    /** The receiver's private one-time pickup code for this reservation (null for older reservations). */
+    void getPickupCode(String reservationId, ResultCallback<String> callback);
+
+    /**
+     * Provider confirms collection by scanning the receiver's QR code. The rules accept this only
+     * when {@code code} matches the receiver's private code.
+     */
+    void markCollectedWithCode(Reservation reservation, User provider, String code, ResultCallback<Void> callback);
+
     Subscription observeForReceiver(String receiverId, ResultCallback<List<Reservation>> callback);
 
     Subscription observeForProvider(String providerId, ResultCallback<List<Reservation>> callback);

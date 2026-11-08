@@ -43,6 +43,10 @@ public class Reservation implements FirestoreDocument {
     private Timestamp cancelledAt;
     private Timestamp collectedAt;
     private CollectionConfirmer collectionConfirmedBy;
+    /** True when the provider scanned the receiver's pickup QR code (checked by the rules). */
+    private boolean pickupVerified;
+    /** The scanned one-time pickup code, recorded with a verified handover. */
+    private String pickupCode;
 
     public Reservation() {
         // Required by Firestore.
@@ -193,6 +197,12 @@ public class Reservation implements FirestoreDocument {
 
     public CollectionConfirmer getCollectionConfirmedBy() { return collectionConfirmedBy; }
     public void setCollectionConfirmedBy(CollectionConfirmer collectionConfirmedBy) { this.collectionConfirmedBy = collectionConfirmedBy; }
+
+    public boolean isPickupVerified() { return pickupVerified; }
+    public void setPickupVerified(boolean pickupVerified) { this.pickupVerified = pickupVerified; }
+
+    public String getPickupCode() { return pickupCode; }
+    public void setPickupCode(String pickupCode) { this.pickupCode = pickupCode; }
 
     @Override
     public String documentId() { return reservationId; }

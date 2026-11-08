@@ -22,6 +22,7 @@ service cloud.firestore {
     function userPath(id) { return /databases/$(database)/documents/users/$(id); }
     function listingPath(id) { return /databases/$(database)/documents/foodListings/$(id); }
     function reservationPath(id) { return /databases/$(database)/documents/reservations/$(id); }
+    function pickupCodePath(id) { return /databases/$(database)/documents/reservations/$(id)/private/pickup; }
     function me() { return get(userPath(uid())).data; }
 
     function changedKeys() { return request.resource.data.diff(resource.data).affectedKeys(); }
@@ -225,6 +226,9 @@ service cloud.firestore {
         && request.resource.data.cancelledAt == null
         && request.resource.data.collectedAt == null
         && request.resource.data.collectionConfirmedBy == null
+        // A reservation cannot start out as "verified by QR".
+        && request.resource.data.get('pickupVerified', false) == false
+        && request.resource.data.get('pickupCode', null) == null
         && validAgainstListing(get(listingPath(request.resource.data.listingId)).data,
                                getAfter(listingPath(request.resource.data.listingId)).data);
 
@@ -258,7 +262,14 @@ service cloud.firestore {
           || (transitions(['CONFIRMED'], 'CANCELLED', ['status', 'cancelledAt']) && request.resource.data.cancelledAt is timestamp)
           || (transitions(['CONFIRMED'], 'COLLECTED', ['status', 'collectedAt', 'collectionConfirmedBy'])
               && request.resource.data.collectedAt is timestamp
-              && request.resource.data.collectionConfirmedBy == 'PROVIDER'));
+              && request.resource.data.collectionConfirmedBy == 'PROVIDER')
+          // Verified hand-over: only with the receiver's private one-time code (scanned from their QR).
+          || (transitions(['CONFIRMED'], 'COLLECTED', ['status', 'collectedAt', 'collectionConfirmedBy', 'pickupVerified', 'pickupCode'])
+              && request.resource.data.collectedAt is timestamp
+              && request.resource.data.collectionConfirmedBy == 'PROVIDER'
+              && request.resource.data.pickupVerified == true
+              && exists(pickupCodePath(resId))
+              && request.resource.data.pickupCode == get(pickupCodePath(resId)).data.code));
       }
 
       function receiverTransition() {
@@ -277,6 +288,20 @@ service cloud.firestore {
       }
 
       allow delete: if false;
+
+      // One-time pickup code. Created by the receiver in the same transaction as the reservation,
+      // readable only by the receiver; the provider never reads it, it can only prove it (above).
+      match /private/{docId} {
+        allow read: if signedIn() && docId == 'pickup'
+          && get(reservationPath(resId)).data.receiverId == uid();
+        allow create: if signedIn() && docId == 'pickup'
+          && !exists(reservationPath(resId))
+          && getAfter(reservationPath(resId)).data.receiverId == uid()
+          && request.resource.data.keys().hasOnly(['code'])
+          && request.resource.data.code is string
+          && request.resource.data.code.matches('^[0-9a-f]{32}$');
+        allow update, delete: if false;
+      }
     }
 
     // ---------- notifications/{notificationId} -------------------------------------------
