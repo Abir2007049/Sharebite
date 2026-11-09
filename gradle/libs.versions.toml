@@ -31,6 +31,7 @@ firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.r
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage" }
+firebase-database = { group = "com.google.firebase", name = "firebase-database" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }

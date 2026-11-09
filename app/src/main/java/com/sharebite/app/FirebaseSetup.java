@@ -36,6 +36,7 @@ public final class FirebaseSetup {
                         .setApplicationId("1:000000000000:android:0000000000000000")
                         .setApiKey("demo-api-key-for-emulators")
                         .setStorageBucket(DEMO_PROJECT_ID + ".appspot.com")
+                        .setDatabaseUrl("https://" + DEMO_PROJECT_ID + "-default-rtdb.firebaseio.com")
                         .build());
             }
             String host = BuildConfig.EMULATOR_HOST;
@@ -46,6 +47,7 @@ public final class FirebaseSetup {
                     .setLocalCacheSettings(MemoryCacheSettings.newBuilder().build())
                     .build());
             FirebaseStorage.getInstance().useEmulator(host, 9199);
+            com.google.firebase.database.FirebaseDatabase.getInstance().useEmulator(host, 9000);
             Log.i(TAG, "Using Firebase emulators at " + host);
             return true;
         }

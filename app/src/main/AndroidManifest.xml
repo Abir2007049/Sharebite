@@ -10,6 +10,12 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- Pickup reminders (Android 13+ asks the user). -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Camera: photographing food for a listing, and scanning pickup QR codes. -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <!-- "On my way" foreground service with live distance updates. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
     <uses-feature
         android:name="android.hardware.location"
@@ -37,6 +43,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ShareBite">
+
+        <!-- Content provider: hands camera apps a content:// URI to write the photo into. -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <!-- Foreground service: live "on my way" notification while heading to a pickup. -->
+        <service
+            android:name=".workers.OnMyWayService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
 
         <!-- QR scanner (zxing-android-embedded): follow the device orientation instead of forcing landscape. -->
         <activity

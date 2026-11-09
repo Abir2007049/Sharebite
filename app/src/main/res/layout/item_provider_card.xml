@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- "Places sharing food now" card, laid out with ConstraintLayout (logo overlaps the cover). -->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="200dp"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/space_s"
@@ -8,65 +10,73 @@
     android:clickable="true"
     android:focusable="true">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:paddingBottom="@dimen/space_m">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="112dp">
+        <ImageView
+            android:id="@+id/placeCover"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="16:7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/placeCover"
-                android:layout_width="match_parent"
-                android:layout_height="88dp"
-                android:contentDescription="@null"
-                android:scaleType="centerCrop" />
+        <ImageView
+            android:id="@+id/placeLogo"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="@dimen/space_m"
+            android:background="@drawable/bg_logo_ring"
+            android:contentDescription="@null"
+            android:elevation="2dp"
+            android:padding="2dp"
+            app:layout_constraintBottom_toBottomOf="@id/placeCover"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/placeCover" />
 
-            <ImageView
-                android:id="@+id/placeLogo"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="bottom|start"
-                android:layout_marginStart="@dimen/space_m"
-                android:background="@drawable/bg_logo_ring"
-                android:contentDescription="@null"
-                android:elevation="2dp"
-                android:padding="2dp" />
-        </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/placeMeta"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="@dimen/space_m"
-            android:paddingTop="@dimen/space_xs"
-            android:paddingBottom="@dimen/space_m">
+            android:layout_marginStart="@dimen/space_s"
+            android:layout_marginEnd="@dimen/space_m"
+            android:layout_marginTop="@dimen/space_xs"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.ShareBite.Label"
+            android:textColor="@color/forest_green"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/placeLogo"
+            app:layout_constraintTop_toBottomOf="@id/placeCover" />
 
-            <TextView
-                android:id="@+id/placeName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textAppearance="@style/TextAppearance.ShareBite.Title" />
+        <TextView
+            android:id="@+id/placeName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_m"
+            android:layout_marginTop="@dimen/space_xs"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.ShareBite.Title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/placeLogo" />
 
-            <TextView
-                android:id="@+id/placeType"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textAppearance="@style/TextAppearance.ShareBite.Caption" />
-
-            <TextView
-                android:id="@+id/placeMeta"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_xs"
-                android:textAppearance="@style/TextAppearance.ShareBite.Label"
-                android:textColor="@color/forest_green" />
-        </LinearLayout>
-    </LinearLayout>
+        <TextView
+            android:id="@+id/placeType"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_m"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.ShareBite.Caption"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/placeName" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -27,7 +27,7 @@ public final class Motion {
         } catch (NumberFormatException e) {
             from = 0;
         }
-        if (from == target) {
+        if (from == target || SystemStatusMonitor.isLowPower()) {
             view.setText(String.valueOf(target));
             return;
         }

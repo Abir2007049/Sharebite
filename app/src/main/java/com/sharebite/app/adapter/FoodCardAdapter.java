@@ -86,6 +86,11 @@ public class FoodCardAdapter extends ListAdapter<ListingItem, FoodCardAdapter.Ho
             h.provider.setText(c.getString(R.string.provider_category_format, l.getProviderName(), category));
         }
         if (h.price != null) bindPrice(c, h, l);
+        if (h.discountBadge != null) {
+            boolean show = l.getDistributionType() == DistributionType.DISCOUNTED && l.discountPercent() > 0;
+            ViewUtils.visible(h.discountBadge, show);
+            if (show) h.discountBadge.setText(c.getString(R.string.percent_off, l.discountPercent()));
+        }
         if (h.pricePill != null) {
             h.pricePill.setText(l.getDistributionType() == DistributionType.DISCOUNTED ? Formatters.money(l.getDiscountedPrice())
                     : c.getString(l.getDistributionType() == DistributionType.FREE ? R.string.price_free : R.string.price_charity));
@@ -144,6 +149,7 @@ public class FoodCardAdapter extends ListAdapter<ListingItem, FoodCardAdapter.Ho
         final TextView allergenAlert; // COMPACT only (nullable)
         final ImageView logo;
         final TextView pricePill; // COMPACT only (nullable)
+        final TextView discountBadge; // FULL only (nullable)
 
         Holder(@NonNull View v) {
             super(v);
@@ -161,6 +167,7 @@ public class FoodCardAdapter extends ListAdapter<ListingItem, FoodCardAdapter.Ho
             allergenAlert = v.findViewById(R.id.allergenAlert);
             logo = v.findViewById(R.id.providerLogo);
             pricePill = v.findViewById(R.id.pricePill);
+            discountBadge = v.findViewById(R.id.discountBadge);
         }
     }
 

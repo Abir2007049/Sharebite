@@ -31,6 +31,7 @@ import com.sharebite.app.ui.profile.GuestAccountFragment;
 import com.sharebite.app.ui.profile.ProfileFragment;
 import com.sharebite.app.ui.reservation.ReservationsFragment;
 import com.sharebite.app.utils.ServiceLocator;
+import com.sharebite.app.utils.ViewUtils;
 import com.sharebite.app.workers.PickupReminders;
 
 import java.util.List;
@@ -61,6 +62,7 @@ public class MainActivity extends BaseActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         applySystemBarInsets(binding.fragmentContainer, true, false);
+        com.sharebite.app.utils.SystemStatusMonitor.status().observe(this, this::renderDeviceStatus);
         floatNavAboveSystemBars();
 
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
@@ -110,6 +112,29 @@ public class MainActivity extends BaseActivity {
             v.setLayoutParams(lp);
             return WindowInsetsCompat.CONSUMED;
         });
+    }
+
+    private final com.sharebite.app.utils.SystemStatusMonitor systemStatus = new com.sharebite.app.utils.SystemStatusMonitor();
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        systemStatus.register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        systemStatus.unregister(this);
+        super.onStop();
+    }
+
+    /** Reacts to airplane mode / low battery / Battery Saver broadcasts with a banner. */
+    private void renderDeviceStatus(com.sharebite.app.utils.SystemStatusMonitor.Status s) {
+        int message = s.airplaneMode ? R.string.status_airplane
+                : s.powerSaver ? R.string.status_power_saver
+                : s.batteryLow ? R.string.status_battery_low : 0;
+        ViewUtils.visible(binding.statusBanner, message != 0);
+        if (message != 0) binding.statusBanner.setText(message);
     }
 
     @Override

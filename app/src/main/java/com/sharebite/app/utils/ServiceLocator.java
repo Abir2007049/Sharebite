@@ -47,6 +47,7 @@ public final class ServiceLocator {
     private final SessionManager sessionManager;
     private final AllergenPreferences allergenPreferences;
     private final com.sharebite.app.domain.interfaces.ChatRepository chatRepository;
+    private final com.sharebite.app.domain.interfaces.PresenceRepository presenceRepository;
 
     private ServiceLocator(Context context) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -67,6 +68,7 @@ public final class ServiceLocator {
         sessionManager = new SessionManager(FirebaseAuth.getInstance(), userRepository);
         allergenPreferences = new AllergenPreferences(context);
         chatRepository = new com.sharebite.app.data.repository.FirestoreChatRepository(db);
+        presenceRepository = new com.sharebite.app.data.repository.RealtimePresenceRepository(realtimeDatabase());
     }
 
     /** True when Firebase initialised (from google-services.json or in emulator mode). */
@@ -100,4 +102,17 @@ public final class ServiceLocator {
     public SessionManager session() { return sessionManager; }
     public AllergenPreferences allergens() { return allergenPreferences; }
     public com.sharebite.app.domain.interfaces.ChatRepository chat() { return chatRepository; }
+    public com.sharebite.app.domain.interfaces.PresenceRepository presence() { return presenceRepository; }
+
+    /** The Realtime Database instance, or null when none is configured (presence is then hidden). */
+    @androidx.annotation.Nullable
+    private static com.google.firebase.database.FirebaseDatabase realtimeDatabase() {
+        try {
+            if (BuildConfig.USE_FIREBASE_EMULATORS) return com.google.firebase.database.FirebaseDatabase.getInstance();
+            if (BuildConfig.RTDB_URL.isEmpty()) return null;
+            return com.google.firebase.database.FirebaseDatabase.getInstance(BuildConfig.RTDB_URL);
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
 }

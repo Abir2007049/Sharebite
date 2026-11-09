@@ -35,6 +35,14 @@ public final class Formatters {
     /** Currency shown with prices (the listing form asks for amounts in this currency). */
     public static final String CURRENCY_SYMBOL = "\u09F3";
 
+    /** "45 min" or "2 h 05 min" for a duration in milliseconds (rounded up to the minute). */
+    @NonNull
+    public static String minutesLeft(long ms) {
+        long minutes = Math.max(0, (ms + 59_999) / 60_000);
+        if (minutes < 60) return minutes + " min";
+        return String.format(Locale.ROOT, "%d h %02d min", minutes / 60, minutes % 60);
+    }
+
     /** "Good morning / afternoon / evening" for the hour of day (0-23). */
     @androidx.annotation.StringRes
     public static int greetingFor(int hourOfDay) {

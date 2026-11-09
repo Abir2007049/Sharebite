@@ -45,4 +45,12 @@ public class StorefrontHelpersTest {
         assertEquals(R.string.greeting_evening, Formatters.greetingFor(20));
         assertEquals(R.string.greeting_evening, Formatters.greetingFor(2));
     }
+
+    @Test
+    public void countdownTextForTheOnMyWayNotification() {
+        assertEquals("0 min", Formatters.minutesLeft(0));
+        assertEquals("1 min", Formatters.minutesLeft(30_000));
+        assertEquals("45 min", Formatters.minutesLeft(45 * 60_000));
+        assertEquals("2 h 05 min", Formatters.minutesLeft((125) * 60_000L));
+    }
 }

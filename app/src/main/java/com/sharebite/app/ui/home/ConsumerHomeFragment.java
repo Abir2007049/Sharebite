@@ -92,6 +92,7 @@ public abstract class ConsumerHomeFragment extends BaseTabFragment {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         User user = currentUser();
         String firstName = user == null ? "" : user.displayName().split(" ")[0];
+        showBrand(binding.header);
         bindHeader(binding.header, getString(com.sharebite.app.utils.Formatters.greetingFor(
                 java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)), firstName), getString(subtitleRes()));
 

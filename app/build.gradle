@@ -31,6 +31,15 @@ android {
         // to use Firebase Storage instead once the project has a Storage bucket.
         def cloudStorage = (project.findProperty('sharebite.cloudStorage') ?: 'false').toString().toBoolean()
         buildConfigField "boolean", "USE_CLOUD_STORAGE", cloudStorage.toString()
+        // Realtime Database (presence + typing in chat): from google-services.json when it has a
+        // firebase_url, otherwise the default instance URL in asia-southeast1 (override with
+        // -Psharebite.rtdbUrl=...). An empty value turns presence off.
+        def rtdbUrl = (project.findProperty('sharebite.rtdbUrl') ?: '').toString()
+        if (!rtdbUrl && hasFirebaseConfig) {
+            def gsj = new groovy.json.JsonSlurper().parse(file('google-services.json'))
+            rtdbUrl = gsj.project_info.firebase_url ?: "https://${gsj.project_info.project_id}-default-rtdb.asia-southeast1.firebasedatabase.app"
+        }
+        buildConfigField "String", "RTDB_URL", "\"${rtdbUrl}\""
     }
 
     buildTypes {
@@ -77,6 +86,7 @@ dependencies {
     implementation libs.firebase.auth
     implementation libs.firebase.firestore
     implementation libs.firebase.storage
+    implementation libs.firebase.database
 
     implementation libs.play.services.location
     implementation libs.glide

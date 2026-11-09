@@ -45,7 +45,7 @@ public class SkeletonLayout extends LinearLayout {
     }
 
     private void start() {
-        if (pulse != null) return;
+        if (pulse != null || com.sharebite.app.utils.SystemStatusMonitor.isLowPower()) return;
         pulse = ObjectAnimator.ofFloat(this, View.ALPHA, 1f, 0.45f);
         pulse.setDuration(750);
         pulse.setRepeatMode(ValueAnimator.REVERSE);

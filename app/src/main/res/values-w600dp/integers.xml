@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Landscape phones and small tablets. -->
+    <integer name="explore_columns">2</integer>
+</resources>

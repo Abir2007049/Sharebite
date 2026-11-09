@@ -71,7 +71,9 @@ public class ExploreFragment extends BaseTabFragment {
         bindHeader(binding.header, getString(R.string.explore_title), getString(R.string.explore_subtitle));
 
         adapter = new FoodCardAdapter(FoodCardAdapter.Style.FULL, this::openListing);
-        binding.results.setLayoutManager(new LinearLayoutManager(requireContext()));
+        // 1 column on phones in portrait, 2-3 on wider screens and in landscape (resource qualifiers).
+        binding.results.setLayoutManager(new androidx.recyclerview.widget.GridLayoutManager(requireContext(),
+                getResources().getInteger(R.integer.explore_columns)));
         binding.results.setAdapter(adapter);
         com.sharebite.app.utils.ServiceLocator.get().allergens().changes()
                 .observe(getViewLifecycleOwner(), adapter::setAvoidedAllergens);

@@ -264,10 +264,49 @@ public class ListingEditorActivity extends BaseActivity {
         ViewUtils.setText(layout, d == null ? "" : Formatters.dateTime(this, d));
     }
 
+    /** Gallery (system photo picker, read through the MediaStore content provider) or camera. */
     private void pickPhoto() {
-        photoPicker.launch(new PickVisualMediaRequest.Builder()
-                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-                .build());
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.add_photo)
+                .setItems(new CharSequence[]{getString(R.string.take_photo), getString(R.string.choose_from_gallery)}, (d, which) -> {
+                    if (which == 0) takePhoto();
+                    else photoPicker.launch(new PickVisualMediaRequest.Builder()
+                            .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                            .build());
+                })
+                .show();
+    }
+
+    // ---- camera via our FileProvider (a ContentProvider) -----------------------------------------
+    private android.net.Uri pendingCapture;
+
+    private final ActivityResultLauncher<android.net.Uri> camera =
+            registerForActivityResult(new ActivityResultContracts.TakePicture(), saved -> {
+                if (Boolean.TRUE.equals(saved) && pendingCapture != null) viewModel.setImage(pendingCapture);
+            });
+
+    private final ActivityResultLauncher<String> cameraPermission =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
+                if (granted) launchCamera();
+                else showMessage(getString(R.string.camera_permission_denied));
+            });
+
+    private void takePhoto() {
+        if (androidx.core.content.ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
+                == android.content.pm.PackageManager.PERMISSION_GRANTED) launchCamera();
+        else cameraPermission.launch(android.Manifest.permission.CAMERA);
+    }
+
+    private void launchCamera() {
+        try {
+            java.io.File dir = new java.io.File(getCacheDir(), "camera");
+            if (!dir.exists() && !dir.mkdirs()) throw new java.io.IOException("no cache dir");
+            java.io.File file = java.io.File.createTempFile("listing_", ".jpg", dir);
+            pendingCapture = androidx.core.content.FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", file);
+            camera.launch(pendingCapture);
+        } catch (java.io.IOException | IllegalArgumentException | android.content.ActivityNotFoundException e) {
+            showMessage(getString(R.string.camera_unavailable));
+        }
     }
 
     private void showPhoto(boolean hasPhoto) {

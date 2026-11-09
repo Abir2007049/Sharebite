@@ -153,6 +153,15 @@
                             android:visibility="gone"
                             app:icon="@drawable/ic_qr" />
                     </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/onMyWayButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_s"
+                        android:text="@string/omw_start"
+                        android:visibility="gone"
+                        app:icon="@drawable/ic_directions" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

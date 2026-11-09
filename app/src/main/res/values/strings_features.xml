@@ -113,4 +113,33 @@
     <string name="greeting_morning">Good morning, %1$s</string>
     <string name="greeting_afternoon">Good afternoon, %1$s</string>
     <string name="greeting_evening">Good evening, %1$s</string>
+
+    <!-- Device status (system broadcasts) -->
+    <string name="status_airplane">Airplane mode is on. You\'re offline: saved listings still show, and your changes sync when you\'re back online.</string>
+    <string name="status_power_saver">Battery Saver is on. ShareBite has turned off decorative animations to save power.</string>
+    <string name="status_battery_low">Battery is low. ShareBite has turned off decorative animations to save power.</string>
+
+    <!-- Camera (FileProvider) -->
+    <string name="take_photo">Take a photo</string>
+    <string name="choose_from_gallery">Choose from gallery</string>
+    <string name="camera_permission_denied">Camera access is needed to take a photo. You can still choose one from your gallery.</string>
+    <string name="camera_unavailable">No camera app is available on this device.</string>
+
+    <!-- On my way (foreground service) -->
+    <string name="omw_start">I\'m on my way</string>
+    <string name="omw_stop_full">Stop sharing my trip</string>
+    <string name="omw_started">Trip started. Follow it in your notifications.</string>
+    <string name="omw_needs_location">Location permission is needed to show how far you are from the pickup.</string>
+    <string name="omw_channel">On my way</string>
+    <string name="omw_channel_description">Live distance and time left while you head to a pickup.</string>
+    <string name="omw_title">On the way to %1$s</string>
+    <string name="omw_distance">%1$s away \u00B7 %2$s</string>
+    <string name="omw_locating">Finding your location\u2026 \u00B7 %1$s</string>
+    <string name="omw_time_left">closes in %1$s</string>
+    <string name="omw_stop">Stop</string>
+
+    <!-- Presence (Realtime Database) -->
+    <string name="presence_online">Online</string>
+    <string name="presence_last_seen">Last seen %1$s</string>
+    <string name="presence_typing">typing\u2026</string>
 </resources>

@@ -11,6 +11,25 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+    <!-- Device status from system broadcasts (airplane mode, low battery, Battery Saver). -->
+    <TextView
+        android:id="@+id/statusBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/nav_margin"
+        android:layout_marginTop="@dimen/space_xs"
+        android:background="@drawable/bg_rounded_panel"
+        android:backgroundTint="@color/warning_bg"
+        android:drawablePadding="@dimen/space_s"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/screen_padding"
+        android:paddingVertical="@dimen/space_s"
+        android:textAppearance="@style/TextAppearance.ShareBite.Caption"
+        android:textColor="@color/warning_amber"
+        android:visibility="gone"
+        app:drawableStartCompat="@drawable/ic_info"
+        app:drawableTint="@color/warning_amber" />
+
     <!-- Floating navigation pill. System-bar insets are added to its margins in MainActivity. -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/navCard"

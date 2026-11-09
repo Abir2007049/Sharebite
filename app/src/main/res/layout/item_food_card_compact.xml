@@ -26,6 +26,12 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/placeholder_food" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:background="@drawable/bg_image_scrim" />
+
             <TextView
                 android:id="@+id/distributionBadge"
                 style="@style/ShareBite.Badge"

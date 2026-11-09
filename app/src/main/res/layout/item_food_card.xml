@@ -25,6 +25,12 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/placeholder_food" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:background="@drawable/bg_image_scrim" />
+
             <TextView
                 android:id="@+id/distributionBadge"
                 style="@style/ShareBite.Badge"
@@ -39,6 +45,19 @@
                 android:backgroundTint="@color/scrim_dark"
                 android:textAllCaps="false"
                 android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/discountBadge"
+                style="@style/ShareBite.Badge"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/space_m"
+                android:backgroundTint="@color/error_red"
+                android:elevation="2dp"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/providerLogo"

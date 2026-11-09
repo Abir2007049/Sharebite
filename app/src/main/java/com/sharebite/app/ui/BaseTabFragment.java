@@ -53,6 +53,11 @@ public abstract class BaseTabFragment extends Fragment {
     }
 
     /** Opens a listing, morphing the tapped card photo into the detail screen header. */
+    /** Shows the small ShareBite logo above the header title (used on home screens). */
+    protected void showBrand(@NonNull ViewScreenHeaderBinding header) {
+        header.brandRow.setVisibility(View.VISIBLE);
+    }
+
     protected void openListing(@NonNull FoodListing listing, @NonNull View image) {
         image.setTransitionName(ListingDetailActivity.SHARED_IMAGE);
         android.os.Bundle options = androidx.core.app.ActivityOptionsCompat

@@ -50,6 +50,7 @@ public class ProviderDashboardFragment extends BaseTabFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         User user = currentUser();
         if (user == null) return;
+        showBrand(binding.header);
         bindHeader(binding.header, getString(com.sharebite.app.utils.Formatters.greetingFor(
                 java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)), user.displayName()), getString(R.string.dashboard_subtitle));
 

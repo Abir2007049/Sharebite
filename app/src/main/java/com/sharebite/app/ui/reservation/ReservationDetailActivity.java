@@ -167,18 +167,64 @@ public class ReservationDetailActivity extends BaseActivity {
             ViewUtils.visible(binding.qrButton, false);
             return;
         }
+        ViewUtils.visible(binding.onMyWayButton, false);
         if (!active) {
             binding.handoverText.setText(R.string.handover_verified);
             ViewUtils.visible(binding.qrButton, false);
             return;
         }
         binding.handoverText.setText(viewerIsProvider ? R.string.handover_text_provider : R.string.handover_text_receiver);
+        ViewUtils.visible(binding.onMyWayButton, !viewerIsProvider);
+        if (!viewerIsProvider) bindOnMyWay(r);
         ViewUtils.visible(binding.qrButton, true);
         binding.qrButton.setText(viewerIsProvider ? R.string.scan_pickup_qr : R.string.show_pickup_qr);
         binding.qrButton.setOnClickListener(v -> {
             if (viewerIsProvider) startScan();
             else showQr(r);
         });
+    }
+
+    // ---- "On my way" foreground service ------------------------------------------------------------
+
+    private final androidx.activity.result.ActivityResultLauncher<String[]> omwPermissions =
+            registerForActivityResult(new androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions(), result -> {
+                boolean location = Boolean.TRUE.equals(result.get(android.Manifest.permission.ACCESS_FINE_LOCATION))
+                        || Boolean.TRUE.equals(result.get(android.Manifest.permission.ACCESS_COARSE_LOCATION));
+                if (location && current != null) startOnMyWay(current);
+                else showMessage(getString(R.string.omw_needs_location));
+            });
+
+    private void bindOnMyWay(Reservation r) {
+        boolean running = r.getReservationId().equals(com.sharebite.app.workers.OnMyWayService.activeReservationId);
+        binding.onMyWayButton.setText(running ? R.string.omw_stop_full : R.string.omw_start);
+        binding.onMyWayButton.setOnClickListener(v -> {
+            if (r.getReservationId().equals(com.sharebite.app.workers.OnMyWayService.activeReservationId)) {
+                startService(com.sharebite.app.workers.OnMyWayService.stop(this));
+                binding.onMyWayButton.setText(R.string.omw_start);
+                return;
+            }
+            if (com.sharebite.app.utils.LocationHelper.hasPermission(this)) {
+                startOnMyWay(r);
+            } else {
+                java.util.List<String> perms = new java.util.ArrayList<>(java.util.Arrays.asList(
+                        android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION));
+                if (android.os.Build.VERSION.SDK_INT >= 33) perms.add(android.Manifest.permission.POST_NOTIFICATIONS);
+                omwPermissions.launch(perms.toArray(new String[0]));
+            }
+        });
+    }
+
+    private void startOnMyWay(Reservation r) {
+        if (r.getPickupDeadline() == null) return;
+        if (android.os.Build.VERSION.SDK_INT >= 33 && checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)
+                != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            omwPermissions.launch(new String[]{android.Manifest.permission.POST_NOTIFICATIONS});
+        }
+        com.sharebite.app.workers.OnMyWayService.ensureChannel(this);
+        ContextCompat.startForegroundService(this, com.sharebite.app.workers.OnMyWayService.start(this, r.getReservationId(),
+                r.getListingId(), r.getListingTitle(), r.getProviderName(), r.getPickupDeadline().toDate().getTime()));
+        binding.onMyWayButton.setText(R.string.omw_stop_full);
+        showMessage(getString(R.string.omw_started));
     }
 
     private void showQr(Reservation r) {
