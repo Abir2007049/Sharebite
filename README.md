@@ -223,14 +223,23 @@ The Android emulator reaches your machine at `10.0.2.2`, which is the default. C
 
 ---
 
+## Photos without Firebase Storage
+
+New Firebase projects need the paid Blaze plan for Storage. By default ShareBite therefore stores photos in **Firestore**: pictures are resized to 1024 px and compressed to under 700 KB, then saved in `images/` (public: listing photos, logos, covers) or `privateImages/` (verification documents, visible only to the organisation and reviewers). A Glide loader displays them like any other image. The rules check the owner, the purpose and a 750 KiB cap. To use Firebase Storage instead, build with `-Psharebite.cloudStorage=true`.
+
+## Provider storefronts
+
+Providers can set a **logo, cover photo and "about" text** in *Edit profile*. Each provider has a storefront page (reachable from any listing and from *Places sharing food now* on Home) showing what they offer right now. Cards show the provider's logo, or a coloured monogram when there isn't one.
+
 ## Demo data and guest browsing
 
 - **Guest mode:** the Welcome screen has *Browse food without an account*. Guests can see Home, Explore, the map and listing details. Reserving, reservations, notifications and impact need an account, and the app sends guests to log in. A guest has no profile and no uid, and nothing is stored for them.
-- **Demo seed:** `firebase-tests/seed.mjs` signs up four demo accounts (two providers, a receiver and a charity) and creates six clearly labelled demo listings plus one pending reservation in the project from `app/google-services.json`. It uses the normal client SDK, so every write passes through your deployed security rules (no admin key). Add `SEED_PLACE="Your City"` to pin the listings around a real place found via OpenStreetMap.
+- **Demo seed:** `firebase-tests/seed.mjs` creates 8 fictional Dhaka food providers (with generated logos, cover photos and an about text), 29 listings with real, openly licensed photos from Wikimedia Commons (each credited on the listing screen), 3 receivers, 2 charities, and reservations in every state, including a chat. It uses the normal client SDK, so every write passes through your deployed security rules (no admin key). Run it again before a demo: expired demo listings are recreated with fresh pickup times.
 
 ```bash
 cd firebase-tests && npm install
-node seed.mjs            # or:  SEED_PLACE="Kolkata, India" node seed.mjs
+python -I demo-assets/prepare_images.py   # once: openly licensed photos + generated logos
+node seed.mjs                             # creates / refreshes the demo data
 ```
 
 The shared demo password is generated on first run and saved to the git-ignored `firebase-tests/.seed-credentials.json` (or set `SEED_PASSWORD`). The demo emails use the reserved `.example` domain. The charity starts `UNVERIFIED`, because verification is a reviewer step (see above). Re-running leaves existing demo data alone. Delete the demo documents in the console to reseed.
@@ -253,11 +262,11 @@ Nominatim's usage policy asks for an identifying `User-Agent` (sent as `ShareBit
 ## Testing
 
 ```bash
-./gradlew testDebugUnitTest        # 65 JVM unit tests
+./gradlew testDebugUnitTest        # 69 JVM unit tests
 ./gradlew lintDebug                # Android lint (0 errors)
 
 cd firebase-tests && npm install
-npm test                           # 42 security-rules tests on the Firestore emulator
+npm test                           # 47 security-rules tests on the Firestore emulator
 ```
 
 - **JVM unit tests** (`app/src/test`) cover:
@@ -282,7 +291,7 @@ No screenshots yet. The app hasn't been run on a device in the environment where
 
 ## Known limitations
 
-- **Device testing is limited.** The app has been installed and launched on a physical Android phone against a real Firebase project (seeded demo data), but the newer features (allergen profile, reminders, QR hand-over, chat, motion) have not been exercised by hand yet. Automated checks: `assembleDebug`, lint (0 errors), 65 unit tests and 42 rules tests on the Firestore emulator.
+- **Device testing is limited.** The app has been installed and launched on a physical Android phone against a real Firebase project (seeded demo data), but the newer features (allergen profile, reminders, QR hand-over, chat, motion) have not been exercised by hand yet. Automated checks: `assembleDebug`, lint (0 errors), 69 unit tests and 47 rules tests on the Firestore emulator.
 - **Reminders are local.** They are scheduled on the receiver's phone, fire within a few minutes of the target time (Android may batch background work), and need notification permission on Android 13+.
 - **Allergen warnings depend on the provider's declaration.** They can't detect undeclared allergens, and the app says so.
 - **No Cloud Functions.** Expiry is enforced by the rules (no reservations after the deadline) and shown by the client (an open listing past its deadline displays as *Expired*). The stored status changes to `EXPIRED` when the provider next opens the app.
