@@ -53,6 +53,15 @@ public class FirestoreUserRepository extends BaseFirestoreRepository<User> imple
     }
 
     @Override
+    public void updateStorefront(String uid, String bio, String logoUrl, String coverUrl, ResultCallback<Void> callback) {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("bio", bio == null || bio.trim().isEmpty() ? null : bio.trim());
+        if (logoUrl != null) updates.put("profileImageUrl", logoUrl);
+        if (coverUrl != null) updates.put("coverImageUrl", coverUrl);
+        deliverVoid(collection.document(uid).update(updates), callback);
+    }
+
+    @Override
     public void submitCharityVerification(CharityVerification verification, ResultCallback<Void> callback) {
         verification.setVerificationStatus(VerificationStatus.PENDING);
         verification.setSubmittedAt(Timestamp.now());

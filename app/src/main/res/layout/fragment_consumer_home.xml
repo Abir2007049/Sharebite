@@ -144,6 +144,31 @@
                 app:icon="@drawable/ic_map" />
         </LinearLayout>
 
+        <!-- Places sharing food now (one card per provider). -->
+        <LinearLayout
+            android:id="@+id/placesSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_l"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/ShareBite.SectionHeader"
+                android:layout_marginHorizontal="@dimen/screen_padding"
+                android:text="@string/section_places" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/placesList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/screen_padding"
+                android:paddingEnd="@dimen/space_s" />
+        </LinearLayout>
+
         <!-- Shown until the user shares their location. -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/locationCard"

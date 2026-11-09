@@ -107,6 +107,89 @@
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Providers: storefront logo, cover photo and about text. -->
+            <LinearLayout
+                android:id="@+id/storefrontSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/ShareBite.FormSection"
+                    android:text="@string/storefront_section" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_xxs"
+                    android:text="@string/storefront_hint"
+                    android:textAppearance="@style/TextAppearance.ShareBite.Caption" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="190dp"
+                    android:layout_marginTop="@dimen/space_m">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/coverImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:contentDescription="@string/change_cover"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/bg_cover_default"
+                        app:shapeAppearance="@style/ShapeAppearance.ShareBite.Medium" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/coverButton"
+                        style="@style/Widget.ShareBite.Button.Tonal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|end"
+                        android:layout_margin="@dimen/space_s"
+                        android:text="@string/change_cover"
+                        app:icon="@drawable/ic_photo_camera" />
+
+                    <ImageView
+                        android:id="@+id/logoImage"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="bottom|start"
+                        android:layout_marginStart="@dimen/space_l"
+                        android:background="@drawable/bg_logo_ring"
+                        android:contentDescription="@string/change_logo"
+                        android:elevation="@dimen/card_elevation"
+                        android:padding="3dp" />
+                </FrameLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/logoButton"
+                    style="@style/Widget.ShareBite.Button.Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/change_logo"
+                    app:icon="@drawable/ic_photo_camera" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/bioInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_s"
+                    android:hint="@string/about_hint"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="300">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="top"
+                        android:inputType="textCapSentences|textMultiLine"
+                        android:maxLength="300"
+                        android:minLines="3" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

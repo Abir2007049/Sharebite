@@ -4,6 +4,7 @@ import android.app.Application;
 
 import java.io.File;
 
+import com.sharebite.app.utils.FirestoreImageLoader;
 import com.sharebite.app.utils.ServiceLocator;
 
 import org.osmdroid.config.Configuration;
@@ -26,6 +27,9 @@ public class ShareBiteApp extends Application {
 
         if (FirebaseSetup.initialise(this)) {
             ServiceLocator.init(this);
+            // Teach Glide to load firestore-image:// pictures.
+            com.bumptech.glide.Glide.get(this).getRegistry().prepend(FirestoreImageLoader.Ref.class,
+                    java.io.InputStream.class, new FirestoreImageLoader.Factory());
         }
         // Otherwise SplashActivity shows the setup instructions.
     }

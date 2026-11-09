@@ -109,6 +109,10 @@ public abstract class ConsumerHomeFragment extends BaseTabFragment {
         binding.mapButton.setOnClickListener(v -> startActivity(new Intent(requireContext(), MapActivity.class)));
         binding.locationButton.setOnClickListener(v -> locationRequester.request());
 
+        binding.placesList.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(requireContext(),
+                androidx.recyclerview.widget.RecyclerView.HORIZONTAL, false));
+        binding.placesList.setAdapter(placesAdapter);
+
         MainViewModel main = mainViewModel();
         main.availableListings().observe(getViewLifecycleOwner(), this::onListings);
         main.userLocation().observe(getViewLifecycleOwner(), loc -> {
@@ -132,7 +136,21 @@ public abstract class ConsumerHomeFragment extends BaseTabFragment {
         onViewReady();
     }
 
+    private final com.sharebite.app.adapter.ProviderChipAdapter placesAdapter =
+            new com.sharebite.app.adapter.ProviderChipAdapter(place -> startActivity(
+                    com.sharebite.app.ui.listing.ProviderProfileActivity.intent(requireContext(), place.providerId, place.name, place.logoUrl)));
+
     private void onListings(UiState<List<FoodListing>> state) {
+        if (state.data != null) {
+            java.util.Date now = new java.util.Date();
+            List<FoodListing> open = new java.util.ArrayList<>();
+            for (FoodListing l : state.data) {
+                if (l.effectiveStatus(now) == com.sharebite.app.data.model.ListingStatus.AVAILABLE) open.add(l);
+            }
+            List<com.sharebite.app.adapter.ProviderChipAdapter.Place> places = com.sharebite.app.adapter.ProviderChipAdapter.summarise(open);
+            placesAdapter.submitList(places);
+            ViewUtils.visible(binding.placesSection, !places.isEmpty());
+        }
         ViewUtils.visible(binding.progress, state.isLoading() && state.data == null);
         ViewUtils.visible(binding.errorText, state.message != null);
         if (state.message != null) binding.errorText.setText(state.message);

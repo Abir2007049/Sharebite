@@ -241,6 +241,31 @@ public class FirestoreFoodRepository extends BaseFirestoreRepository<FoodListing
         return observeQuery(collection.whereEqualTo("providerId", providerId), callback);
     }
 
+    @Override
+    public Subscription observeAvailableFromProvider(String providerId, ResultCallback<List<FoodListing>> callback) {
+        return observeQuery(collection.whereEqualTo("providerId", providerId)
+                .whereEqualTo("status", ListingStatus.AVAILABLE.name()), callback);
+    }
+
+    @Override
+    public void refreshProviderBranding(String providerId, String providerName, String logoUrl, ResultCallback<Void> callback) {
+        collection.whereEqualTo("providerId", providerId).get().addOnSuccessListener(snap -> {
+            com.google.firebase.firestore.WriteBatch batch = db.batch();
+            int n = 0;
+            for (DocumentSnapshot d : snap.getDocuments()) {
+                String status = d.getString("status");
+                if (!"AVAILABLE".equals(status) && !"FULLY_RESERVED".equals(status)) continue;
+                Map<String, Object> u = new HashMap<>();
+                u.put("providerName", providerName);
+                u.put("providerLogoUrl", logoUrl);
+                batch.update(d.getReference(), u);
+                n++;
+            }
+            if (n == 0) callback.onSuccess(null);
+            else deliverVoid(batch.commit(), callback);
+        }).addOnFailureListener(callback::onError);
+    }
+
     // ---- helpers ---------------------------------------------------------------------------
 
     private FoodListing readOwnedListing(Transaction tx, DocumentReference ref, String providerId)

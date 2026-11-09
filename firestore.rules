@@ -55,7 +55,10 @@ service cloud.firestore {
             && !changedKeys().hasAny(['uid', 'email', 'role', 'createdAt', 'active', 'verificationStatus'])
             && str(request.resource.data.fullName, 2, 60)
             && str(request.resource.data.phone, 7, 20)
-            && optStr(request.resource.data.organizationName, 80))
+            && optStr(request.resource.data.organizationName, 80)
+            && optStr(request.resource.data.get('bio', null), 300)
+            && optStr(request.resource.data.get('profileImageUrl', null), 300)
+            && optStr(request.resource.data.get('coverImageUrl', null), 300))
         // A charity moving itself to PENDING, only together with a submission document.
         || (signedIn() && uid() == userId
             && resource.data.role == 'CHARITY'
@@ -319,6 +322,37 @@ service cloud.firestore {
           && request.resource.data.code.matches('^[0-9a-f]{32}$');
         allow update, delete: if false;
       }
+    }
+
+    // ---------- images/{imageId} and privateImages/{imageId} -------------------------------
+    // Photos stored in Firestore when the project has no Storage bucket (free plan).
+
+    function validImage(d, imageId, purposes) {
+      return d.keys().hasOnly(['imageId', 'ownerId', 'purpose', 'contentType', 'data', 'createdAt'])
+        && d.imageId == imageId
+        && d.ownerId == uid()
+        && d.purpose in purposes
+        && d.contentType == 'image/jpeg'
+        && d.data is bytes
+        && d.data.size() > 0 && d.data.size() <= 750 * 1024
+        && d.createdAt == request.time;
+    }
+
+    match /images/{imageId} {
+      // Listing photos, logos and covers are public, like the listings they belong to.
+      allow read: if true;
+      allow create: if signedIn()
+        && validImage(request.resource.data, imageId, ['listing', 'logo', 'cover'])
+        && (request.resource.data.purpose == 'logo' || me().role == 'PROVIDER');
+      allow update: if false;
+      allow delete: if signedIn() && resource.data.ownerId == uid();
+    }
+
+    match /privateImages/{imageId} {
+      // Verification documents: the organisation and reviewers only.
+      allow read: if signedIn() && (resource.data.ownerId == uid() || isAdmin());
+      allow create: if signedIn() && validImage(request.resource.data, imageId, ['verification']);
+      allow update, delete: if false;
     }
 
     // ---------- notifications/{notificationId} -------------------------------------------

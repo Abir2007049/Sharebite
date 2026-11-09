@@ -86,4 +86,26 @@
     <string name="chat_empty">No messages yet. Use this to sort out the pickup, like \"I\'m at the side entrance\".</string>
     <string name="chat_closed">This reservation is closed, so new messages are turned off.</string>
     <string name="chat_too_long">Keep messages under %1$d characters.</string>
+
+    <!-- Storefronts, photos and sharing -->
+    <string name="share">Share</string>
+    <string name="share_text">%1$s from %2$s (%3$s) on ShareBite. Collect before %4$s at %5$s.</string>
+    <string name="see_shop">See all from this place</string>
+    <string name="photo_credit">Photo: %1$s</string>
+    <string name="section_places">Places sharing food now</string>
+    <plurals name="place_listings">
+        <item quantity="one">%d item available</item>
+        <item quantity="other">%d items available</item>
+    </plurals>
+    <plurals name="storefront_available">
+        <item quantity="one">%d item available now</item>
+        <item quantity="other">%d items available now</item>
+    </plurals>
+    <string name="storefront_empty">Nothing on offer right now. Check back later today.</string>
+    <string name="storefront_section">Your storefront</string>
+    <string name="storefront_hint">Shown to everyone on your shop page and on your listings.</string>
+    <string name="change_logo">Change logo</string>
+    <string name="change_cover">Change cover photo</string>
+    <string name="about_hint">About your place (optional)</string>
+    <string name="uploading_photos">Uploading photos…</string>
 </resources>

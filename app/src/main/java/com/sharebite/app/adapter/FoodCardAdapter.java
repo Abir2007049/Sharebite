@@ -72,6 +72,9 @@ public class FoodCardAdapter extends ListAdapter<ListingItem, FoodCardAdapter.Ho
 
         ImageLoader.loadFood(h.image, l.getImageUrl());
         h.title.setText(l.getTitle());
+        if (h.logo != null) {
+            ImageLoader.loadLogo(h.logo, l.getProviderLogoUrl(), new com.sharebite.app.utils.Monogram(c, l.getProviderName()));
+        }
         ViewUtils.styleDistributionBadge(h.badge, l.getDistributionType());
         h.timeLeft.setText(Formatters.timeLeft(c, l.getPickupDeadline(), now));
         h.timeLeft.setBackgroundTintList(c.getColorStateList(Formatters.endingWithin(l.getPickupDeadline(), now, 60)
@@ -133,6 +136,7 @@ public class FoodCardAdapter extends ListAdapter<ListingItem, FoodCardAdapter.Ho
         final TextView title, badge, timeLeft, quantity;
         final TextView provider, price, originalPrice, distance, allergens, eligibility; // FULL only (nullable)
         final TextView allergenAlert; // COMPACT only (nullable)
+        final ImageView logo;
 
         Holder(@NonNull View v) {
             super(v);
@@ -148,6 +152,7 @@ public class FoodCardAdapter extends ListAdapter<ListingItem, FoodCardAdapter.Ho
             allergens = v.findViewById(R.id.allergenWarning);
             eligibility = v.findViewById(R.id.eligibilityNote);
             allergenAlert = v.findViewById(R.id.allergenAlert);
+            logo = v.findViewById(R.id.providerLogo);
         }
     }
 
@@ -160,7 +165,8 @@ public class FoodCardAdapter extends ListAdapter<ListingItem, FoodCardAdapter.Ho
         @Override
         public boolean areContentsTheSame(@NonNull ListingItem a, @NonNull ListingItem b) {
             FoodListing x = a.listing, y = b.listing;
-            return x.getAvailableQuantity() == y.getAvailableQuantity()
+            return Objects.equals(x.getProviderLogoUrl(), y.getProviderLogoUrl())
+                    && x.getAvailableQuantity() == y.getAvailableQuantity()
                     && Objects.equals(x.getTitle(), y.getTitle())
                     && Objects.equals(x.getImageUrl(), y.getImageUrl())
                     && Objects.equals(x.getStatus(), y.getStatus())

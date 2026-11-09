@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/space_xxl">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="236dp">
+
+                <ImageView
+                    android:id="@+id/cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:contentDescription="@null"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/bg_cover_default" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@drawable/bg_cover_scrim" />
+
+                <ImageView
+                    android:id="@+id/logo"
+                    android:layout_width="88dp"
+                    android:layout_height="88dp"
+                    android:layout_gravity="bottom|start"
+                    android:layout_marginStart="@dimen/screen_padding"
+                    android:background="@drawable/bg_logo_ring"
+                    android:contentDescription="@null"
+                    android:elevation="@dimen/card_elevation"
+                    android:outlineSpotShadowColor="@color/shadow_tint"
+                    android:padding="3dp"
+                    tools:targetApi="p"
+                    xmlns:tools="http://schemas.android.com/tools" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_padding"
+                android:layout_marginTop="@dimen/space_m"
+                android:textAppearance="@style/TextAppearance.ShareBite.Headline" />
+
+            <TextView
+                android:id="@+id/type"
+                style="@style/ShareBite.Badge"
+                android:layout_marginStart="@dimen/screen_padding"
+                android:layout_marginTop="@dimen/space_s"
+                android:backgroundTint="@color/mint_container"
+                android:textColor="@color/forest_green" />
+
+            <TextView
+                android:id="@+id/bio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_padding"
+                android:layout_marginTop="@dimen/space_m"
+                android:textAppearance="@style/TextAppearance.ShareBite.BodyLarge"
+                android:textColor="@color/charcoal_secondary"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/availableCount"
+                style="@style/ShareBite.SectionHeader"
+                android:layout_marginHorizontal="@dimen/screen_padding"
+                android:layout_marginTop="@dimen/space_xl" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_padding"
+                android:layout_marginTop="@dimen/space_s"
+                android:indeterminate="true" />
+
+            <TextView
+                android:id="@+id/emptyText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_padding"
+                android:layout_marginTop="@dimen/space_m"
+                android:background="@drawable/bg_rounded_panel"
+                android:padding="@dimen/space_l"
+                android:text="@string/storefront_empty"
+                android:textAppearance="@style/TextAppearance.ShareBite.Body"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:nestedScrollingEnabled="false" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/transparent"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:navigationIconTint="@color/white" />
+</FrameLayout>

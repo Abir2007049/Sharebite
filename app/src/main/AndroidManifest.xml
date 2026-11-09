@@ -107,6 +107,9 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name=".ui.listing.ProviderProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.reservation.ChatActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />

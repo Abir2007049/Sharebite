@@ -39,6 +39,12 @@ public class FirebaseImageStorage implements ImageStorage {
                 jpegBytes, callback);
     }
 
+    @Override
+    public void uploadProfileImage(String uid, Purpose purpose, byte[] jpegBytes, ResultCallback<String> callback) {
+        upload("profile_images/" + uid + "/" + purpose.name().toLowerCase(java.util.Locale.ROOT) + "_"
+                + System.currentTimeMillis() + ".jpg", jpegBytes, callback);
+    }
+
     private void upload(String path, byte[] bytes, ResultCallback<String> callback) {
         StorageReference ref;
         try {

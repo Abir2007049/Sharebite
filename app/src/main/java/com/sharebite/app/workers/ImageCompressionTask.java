@@ -29,10 +29,19 @@ public class ImageCompressionTask implements Callable<byte[]> {
 
     private final ContentResolver resolver;
     private final Uri uri;
+    private final int maxDimension;
+    private final int maxBytes;
 
     public ImageCompressionTask(@NonNull ContentResolver resolver, @NonNull Uri uri) {
+        this(resolver, uri, MAX_DIMENSION_PX, MAX_UPLOAD_BYTES);
+    }
+
+    /** @param maxDimension longest side in px; @param maxBytes size the JPEG must fit in. */
+    public ImageCompressionTask(@NonNull ContentResolver resolver, @NonNull Uri uri, int maxDimension, int maxBytes) {
         this.resolver = resolver;
         this.uri = uri;
+        this.maxDimension = maxDimension;
+        this.maxBytes = maxBytes;
     }
 
     @WorkerThread
@@ -49,7 +58,7 @@ public class ImageCompressionTask implements Callable<byte[]> {
         checkCancelled();
 
         BitmapFactory.Options decode = new BitmapFactory.Options();
-        decode.inSampleSize = calculateInSampleSize(bounds.outWidth, bounds.outHeight, MAX_DIMENSION_PX);
+        decode.inSampleSize = calculateInSampleSize(bounds.outWidth, bounds.outHeight, maxDimension);
         Bitmap sampled;
         try (InputStream in = open()) {
             sampled = BitmapFactory.decodeStream(in, null, decode);
@@ -58,13 +67,19 @@ public class ImageCompressionTask implements Callable<byte[]> {
         checkCancelled();
 
         Bitmap scaled = scaleAndRotate(sampled, readRotation());
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        scaled.compress(Bitmap.CompressFormat.JPEG, JPEG_QUALITY, out);
+        // Step the quality down until the JPEG fits the backend's limit.
+        byte[] bytes = null;
+        for (int quality = JPEG_QUALITY; quality >= 40; quality -= 10) {
+            checkCancelled();
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            scaled.compress(Bitmap.CompressFormat.JPEG, quality, out);
+            bytes = out.toByteArray();
+            if (bytes.length <= maxBytes) break;
+        }
         if (scaled != sampled) scaled.recycle();
         sampled.recycle();
 
-        byte[] bytes = out.toByteArray();
-        if (bytes.length > MAX_UPLOAD_BYTES) throw new IOException("Image is too large even after compression.");
+        if (bytes == null || bytes.length > maxBytes) throw new IOException("Image is too large even after compression.");
         return bytes;
     }
 
@@ -80,7 +95,7 @@ public class ImageCompressionTask implements Callable<byte[]> {
     private Bitmap scaleAndRotate(Bitmap src, int rotationDegrees) {
         int w = src.getWidth();
         int h = src.getHeight();
-        float scale = Math.min(1f, (float) MAX_DIMENSION_PX / Math.max(w, h));
+        float scale = Math.min(1f, (float) maxDimension / Math.max(w, h));
         if (scale >= 1f && rotationDegrees == 0) return src;
         Matrix m = new Matrix();
         m.postScale(scale, scale);

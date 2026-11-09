@@ -31,6 +31,17 @@
                 style="@style/ShareBite.Badge"
                 android:layout_gravity="top|start"
                 android:layout_margin="@dimen/space_s" />
+
+            <ImageView
+                android:id="@+id/providerLogo"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="bottom|start"
+                android:layout_margin="@dimen/space_s"
+                android:background="@drawable/bg_logo_ring"
+                android:contentDescription="@null"
+                android:elevation="2dp"
+                android:padding="2dp" />
         </FrameLayout>
 
         <LinearLayout

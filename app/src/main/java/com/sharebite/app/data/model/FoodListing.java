@@ -46,6 +46,10 @@ public class FoodListing implements FirestoreDocument {
     private ListingStatus status;
     /** ID of the reservation that last changed availableQuantity; lets security rules verify the change. */
     private String lastReservationId;
+    /** Provider logo copied onto the listing (like providerName) so cards can show it. */
+    private String providerLogoUrl;
+    /** Photo credit when the picture needs attribution (e.g. a Creative Commons photo). */
+    private String imageCredit;
     @ServerTimestamp private Timestamp createdAt;
     @ServerTimestamp private Timestamp updatedAt;
 
@@ -224,6 +228,12 @@ public class FoodListing implements FirestoreDocument {
 
     public ListingStatus getStatus() { return status; }
     public void setStatus(ListingStatus status) { this.status = status; }
+
+    public String getProviderLogoUrl() { return providerLogoUrl; }
+    public void setProviderLogoUrl(String providerLogoUrl) { this.providerLogoUrl = providerLogoUrl; }
+
+    public String getImageCredit() { return imageCredit; }
+    public void setImageCredit(String imageCredit) { this.imageCredit = imageCredit; }
 
     public String getLastReservationId() { return lastReservationId; }
     public void setLastReservationId(String lastReservationId) { this.lastReservationId = lastReservationId; }

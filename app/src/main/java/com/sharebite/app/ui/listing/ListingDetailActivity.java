@@ -222,6 +222,19 @@ public class ListingDetailActivity extends BaseActivity implements ReserveBottom
         binding.timeLeft.setText(Formatters.timeLeft(this, l.getPickupDeadline(), now));
 
         binding.providerName.setText(l.getProviderName());
+        ImageLoader.loadLogo(binding.providerLogo, l.getProviderLogoUrl(), new com.sharebite.app.utils.Monogram(this, l.getProviderName()));
+        binding.shopLink.setOnClickListener(v -> startActivity(ProviderProfileActivity.intent(this,
+                l.getProviderId(), l.getProviderName(), l.getProviderLogoUrl())));
+        boolean credit = l.getImageCredit() != null && !l.getImageCredit().trim().isEmpty();
+        ViewUtils.visible(binding.imageCredit, credit);
+        if (credit) binding.imageCredit.setText(getString(R.string.photo_credit, l.getImageCredit()));
+        binding.toolbar.getMenu().clear();
+        binding.toolbar.inflateMenu(R.menu.menu_listing_detail);
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() != R.id.action_share) return false;
+            share(l);
+            return true;
+        });
         binding.providerType.setText(l.getProviderType() == null ? R.string.role_provider : l.getProviderType().labelRes);
 
         binding.address.setText(l.getPickupAddress());
@@ -243,6 +256,16 @@ public class ListingDetailActivity extends BaseActivity implements ReserveBottom
         ViewUtils.visible(binding.ownerSection, owner);
         if (owner) bindOwnerActions(l, status);
         else bindConsumerActions(l, now);
+    }
+
+    /** Shares a short text description through the Android share sheet (no account needed). */
+    private void share(FoodListing l) {
+        String price = l.getDistributionType() == DistributionType.DISCOUNTED
+                ? Formatters.money(l.getDiscountedPrice()) : getString(l.getDistributionType().labelRes);
+        String text = getString(R.string.share_text, l.getTitle(), l.getProviderName(), price,
+                Formatters.dateTime(this, l.getPickupDeadline()), l.getPickupAddress());
+        Intent send = new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, text);
+        startActivity(Intent.createChooser(send, getString(R.string.share)));
     }
 
     private void renderDistance(FoodListing l) {

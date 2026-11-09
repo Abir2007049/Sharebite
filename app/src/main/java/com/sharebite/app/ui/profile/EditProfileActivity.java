@@ -31,6 +31,22 @@ public class EditProfileActivity extends BaseActivity {
     private User user;
     private ProviderType providerType;
     private boolean saving;
+    private android.net.Uri pickedLogo;
+    private android.net.Uri pickedCover;
+    private com.sharebite.app.workers.BackgroundTaskRunner runner;
+
+    private final androidx.activity.result.ActivityResultLauncher<androidx.activity.result.PickVisualMediaRequest> logoPicker =
+            registerForActivityResult(new androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia(), uri -> {
+                if (uri == null) return;
+                pickedLogo = uri;
+                com.bumptech.glide.Glide.with(this).load(uri).circleCrop().into(binding.logoImage);
+            });
+    private final androidx.activity.result.ActivityResultLauncher<androidx.activity.result.PickVisualMediaRequest> coverPicker =
+            registerForActivityResult(new androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia(), uri -> {
+                if (uri == null) return;
+                pickedCover = uri;
+                com.sharebite.app.utils.ImageLoader.loadLocal(binding.coverImage, uri);
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +76,7 @@ public class EditProfileActivity extends BaseActivity {
             ViewUtils.setText(binding.organizationInput, user.getOrganizationName());
         }
         if (isProvider) setupProviderTypes();
+        if (isProvider) setupStorefront((Provider) user, savedInstanceState == null);
         binding.saveButton.setOnClickListener(v -> save());
     }
 
@@ -67,6 +84,91 @@ public class EditProfileActivity extends BaseActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (providerType != null) outState.putString(STATE_TYPE, providerType.name());
+    }
+
+    private void setupStorefront(Provider p, boolean firstTime) {
+        runner = new com.sharebite.app.workers.BackgroundTaskRunner("storefront-photos", 1);
+        ViewUtils.visible(binding.storefrontSection, true);
+        if (firstTime) ViewUtils.setText(binding.bioInput, p.getBio());
+        com.sharebite.app.utils.ImageLoader.loadLogo(binding.logoImage, p.getProfileImageUrl(),
+                new com.sharebite.app.utils.Monogram(this, p.displayName()));
+        if (p.getCoverImageUrl() != null) com.sharebite.app.utils.ImageLoader.loadFood(binding.coverImage, p.getCoverImageUrl());
+        androidx.activity.result.PickVisualMediaRequest imagesOnly = new androidx.activity.result.PickVisualMediaRequest.Builder()
+                .setMediaType(androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build();
+        binding.logoButton.setOnClickListener(v -> logoPicker.launch(imagesOnly));
+        binding.logoImage.setOnClickListener(v -> logoPicker.launch(imagesOnly));
+        binding.coverButton.setOnClickListener(v -> coverPicker.launch(imagesOnly));
+        binding.coverImage.setOnClickListener(v -> coverPicker.launch(imagesOnly));
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (runner != null) runner.shutdown();
+        super.onDestroy();
+    }
+
+    /** Compresses and uploads a picked picture, or passes null straight on when nothing was picked. */
+    private void upload(@androidx.annotation.Nullable android.net.Uri uri,
+                        com.sharebite.app.domain.interfaces.ImageStorage.Purpose purpose, ResultCallback<String> next) {
+        if (uri == null) {
+            next.onSuccess(null);
+            return;
+        }
+        com.sharebite.app.domain.interfaces.ImageStorage images = ServiceLocator.get().images();
+        runner.submit(new com.sharebite.app.workers.ImageCompressionTask(getContentResolver(), uri,
+                purpose == com.sharebite.app.domain.interfaces.ImageStorage.Purpose.LOGO ? 512 : images.maxDimensionPx(),
+                images.maxBytes()), new ResultCallback<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                images.uploadProfileImage(user.getUid(), purpose, bytes, next);
+            }
+
+            @Override
+            public void onError(@NonNull Exception error) {
+                next.onError(error);
+            }
+        });
+    }
+
+    /** Providers: photos and about text first, then the basic profile, then refresh listing branding. */
+    private void saveStorefrontThen(Runnable then) {
+        if (!(user instanceof Provider)) {
+            then.run();
+            return;
+        }
+        String bio = ViewUtils.text(binding.bioInput).trim();
+        upload(pickedLogo, com.sharebite.app.domain.interfaces.ImageStorage.Purpose.LOGO, new ResultCallback<String>() {
+            @Override
+            public void onSuccess(String logoUrl) {
+                upload(pickedCover, com.sharebite.app.domain.interfaces.ImageStorage.Purpose.COVER, new ResultCallback<String>() {
+                    @Override
+                    public void onSuccess(String coverUrl) {
+                        ServiceLocator.get().users().updateStorefront(user.getUid(), bio, logoUrl, coverUrl, new ResultCallback<Void>() {
+                            @Override
+                            public void onSuccess(Void result) {
+                                if (logoUrl != null) pendingLogoUrl = logoUrl;
+                                then.run();
+                            }
+
+                            @Override public void onError(@NonNull Exception error) { failSave(error); }
+                        });
+                    }
+
+                    @Override public void onError(@NonNull Exception error) { failSave(error); }
+                });
+            }
+
+            @Override public void onError(@NonNull Exception error) { failSave(error); }
+        });
+    }
+
+    private String pendingLogoUrl;
+
+    private void failSave(@NonNull Exception error) {
+        saving = false;
+        ViewUtils.visible(binding.progress, false);
+        binding.saveButton.setEnabled(true);
+        showMessage(ErrorMessages.from(error));
     }
 
     private void setupProviderTypes() {
@@ -95,6 +197,10 @@ public class EditProfileActivity extends BaseActivity {
         saving = true;
         ViewUtils.visible(binding.progress, true);
         binding.saveButton.setEnabled(false);
+        saveStorefrontThen(() -> saveBasics(name, phone, org));
+    }
+
+    private void saveBasics(String name, String phone, String org) {
         ServiceLocator.get().users().updateProfile(user.getUid(), name, phone,
                 user.getRole() == UserRole.RECEIVER ? null : (org.isEmpty() ? null : org),
                 user.getRole() == UserRole.PROVIDER ? providerType : null,
@@ -102,6 +208,14 @@ public class EditProfileActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Void result) {
                         // SessionManager's realtime listener picks up the new profile.
+                        if (user instanceof Provider) {
+                            String shownName = ((Provider) user).getProviderType().isBusiness() && !org.isEmpty() ? org : name;
+                            String logo = pendingLogoUrl != null ? pendingLogoUrl : user.getProfileImageUrl();
+                            ServiceLocator.get().food().refreshProviderBranding(user.getUid(), shownName, logo, new ResultCallback<Void>() {
+                                @Override public void onSuccess(Void r) { }
+                                @Override public void onError(@NonNull Exception e) { }
+                            });
+                        }
                         finish();
                     }
 

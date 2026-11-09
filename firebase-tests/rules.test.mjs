@@ -12,7 +12,7 @@ import {
   assertFails, assertSucceeds, initializeTestEnvironment,
 } from '@firebase/rules-unit-testing';
 import {
-  Timestamp, collection, doc, getDoc, getDocs, query, runTransaction, serverTimestamp,
+  Bytes, Timestamp, collection, deleteDoc, doc, getDoc, getDocs, query, runTransaction, serverTimestamp,
   setDoc, updateDoc, where, writeBatch,
 } from 'firebase/firestore';
 
@@ -464,6 +464,49 @@ describe('reservation chat', () => {
     await updateDoc(doc(db('provider1'), 'reservations', 'c2'), { status: 'REJECTED', rejectedAt: serverTimestamp() });
     await assertFails(setDoc(doc(db('alice'), 'reservations', 'c2', 'messages', 'm4'), msg('m4', 'alice')));
     await assertSucceeds(getDocs(collection(db('alice'), 'reservations', 'c2', 'messages')));
+  });
+});
+
+// ---- photos stored in Firestore + storefront fields ----------------------------------------------
+
+describe('images and storefronts', () => {
+  const img = (id, owner, purpose, size = 1024) => ({
+    imageId: id, ownerId: owner, purpose, contentType: 'image/jpeg',
+    data: Bytes.fromUint8Array(new Uint8Array(size).fill(7)), createdAt: serverTimestamp(),
+  });
+
+  test('providers upload listing photos and covers; everyone can view them', async () => {
+    await assertSucceeds(setDoc(doc(db('provider1'), 'images', 'i1'), img('i1', 'provider1', 'listing')));
+    await assertSucceeds(setDoc(doc(db('provider1'), 'images', 'i2'), img('i2', 'provider1', 'cover')));
+    await assertSucceeds(getDoc(doc(env.unauthenticatedContext().firestore(), 'images', 'i1')));
+  });
+
+  test('anyone signed in may upload their own logo; only providers upload food photos', async () => {
+    await assertSucceeds(setDoc(doc(db('alice'), 'images', 'i3'), img('i3', 'alice', 'logo')));
+    await assertFails(setDoc(doc(db('alice'), 'images', 'i4'), img('i4', 'alice', 'listing')));
+    await assertFails(setDoc(doc(env.unauthenticatedContext().firestore(), 'images', 'i5'), img('i5', 'nobody', 'logo')));
+  });
+
+  test('images cannot be spoofed, oversized, edited, or deleted by others', async () => {
+    await assertFails(setDoc(doc(db('provider1'), 'images', 'i6'), img('i6', 'provider2', 'listing')));
+    await assertFails(setDoc(doc(db('provider1'), 'images', 'i7'), img('i7', 'provider1', 'listing', 800 * 1024)));
+    await assertSucceeds(setDoc(doc(db('provider1'), 'images', 'i8'), img('i8', 'provider1', 'listing')));
+    await assertFails(updateDoc(doc(db('provider1'), 'images', 'i8'), { purpose: 'logo' }));
+    await assertFails(deleteDoc(doc(db('provider2'), 'images', 'i8')));
+    await assertSucceeds(deleteDoc(doc(db('provider1'), 'images', 'i8')));
+  });
+
+  test('verification documents are private to the organisation', async () => {
+    await assertSucceeds(setDoc(doc(db('charityU'), 'privateImages', 'v1'), img('v1', 'charityU', 'verification')));
+    await assertSucceeds(getDoc(doc(db('charityU'), 'privateImages', 'v1')));
+    await assertFails(getDoc(doc(db('provider1'), 'privateImages', 'v1')));
+    await assertFails(getDoc(doc(env.unauthenticatedContext().firestore(), 'privateImages', 'v1')));
+  });
+
+  test('providers can set their storefront text and pictures within limits', async () => {
+    const ref = doc(db('provider1'), 'users', 'provider1');
+    await assertSucceeds(updateDoc(ref, { bio: 'Fresh bread every evening.', coverImageUrl: 'firestore-image://images/i2', profileImageUrl: 'firestore-image://images/i1' }));
+    await assertFails(updateDoc(ref, { bio: 'x'.repeat(301) }));
   });
 });
 

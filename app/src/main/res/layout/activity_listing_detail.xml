@@ -45,6 +45,18 @@
                     android:src="@drawable/placeholder_food"
                     app:shapeAppearance="@style/ShapeAppearance.ShareBite.Medium" />
 
+                <TextView
+                    android:id="@+id/imageCredit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_xs"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textAppearance="@style/TextAppearance.ShareBite.Caption"
+                    android:textColor="@color/charcoal_hint"
+                    android:textSize="11sp"
+                    android:visibility="gone" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -255,13 +267,10 @@
                         android:padding="@dimen/space_l">
 
                         <ImageView
-                            android:layout_width="44dp"
-                            android:layout_height="44dp"
-                            android:background="@drawable/bg_icon_circle"
-                            android:contentDescription="@null"
-                            android:padding="11dp"
-                            android:src="@drawable/ic_business"
-                            app:tint="@color/forest_green" />
+                            android:id="@+id/providerLogo"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@null" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -281,6 +290,21 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textAppearance="@style/TextAppearance.ShareBite.Caption" />
+
+                            <TextView
+                                android:id="@+id/shopLink"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_xxs"
+                                android:background="?attr/selectableItemBackground"
+                                android:drawablePadding="@dimen/space_xs"
+                                android:gravity="center_vertical"
+                                android:minHeight="32dp"
+                                android:text="@string/see_shop"
+                                android:textAppearance="@style/TextAppearance.ShareBite.Label"
+                                android:textColor="@color/forest_green"
+                                app:drawableStartCompat="@drawable/ic_storefront"
+                                app:drawableTint="@color/forest_green" />
                         </LinearLayout>
 
                         <com.google.android.material.button.MaterialButton

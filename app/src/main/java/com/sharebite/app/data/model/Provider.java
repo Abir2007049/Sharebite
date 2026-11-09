@@ -4,6 +4,10 @@ package com.sharebite.app.data.model;
 public class Provider extends User {
 
     private ProviderType providerType = ProviderType.OTHER;
+    /** Storefront cover photo (logo is {@code profileImageUrl}). */
+    private String coverImageUrl;
+    /** Short "about us" text on the storefront. */
+    private String bio;
 
     public Provider() {
         // Required by Firestore.
@@ -44,6 +48,12 @@ public class Provider extends User {
         }
         return getFullName();
     }
+
+    public String getCoverImageUrl() { return coverImageUrl; }
+    public void setCoverImageUrl(String coverImageUrl) { this.coverImageUrl = coverImageUrl; }
+
+    public String getBio() { return bio; }
+    public void setBio(String bio) { this.bio = bio; }
 
     public ProviderType getProviderType() { return providerType; }
     public void setProviderType(ProviderType providerType) {

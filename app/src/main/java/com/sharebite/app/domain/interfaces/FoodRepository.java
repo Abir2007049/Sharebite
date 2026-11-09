@@ -37,4 +37,10 @@ public interface FoodRepository extends Repository<FoodListing, String> {
     Subscription observeAvailableListings(ResultCallback<List<FoodListing>> callback);
 
     Subscription observeProviderListings(String providerId, ResultCallback<List<FoodListing>> callback);
+
+    /** A provider's open listings; readable without an account (storefront page). */
+    Subscription observeAvailableFromProvider(String providerId, ResultCallback<List<FoodListing>> callback);
+
+    /** Copies a provider's new name/logo onto their open listings so cards stay current. */
+    void refreshProviderBranding(String providerId, String providerName, @Nullable String logoUrl, ResultCallback<Void> callback);
 }

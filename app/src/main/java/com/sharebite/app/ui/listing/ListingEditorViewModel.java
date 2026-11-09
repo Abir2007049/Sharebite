@@ -152,7 +152,8 @@ public class ListingEditorViewModel extends ViewModel {
             persist(listing, null);
             return;
         }
-        runner.submit(new ImageCompressionTask(resolver, image), new ResultCallback<byte[]>() {
+        runner.submit(new ImageCompressionTask(resolver, image, com.sharebite.app.utils.ServiceLocator.get().images().maxDimensionPx(),
+                com.sharebite.app.utils.ServiceLocator.get().images().maxBytes()), new ResultCallback<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 persist(listing, bytes);
@@ -190,6 +191,7 @@ public class ListingEditorViewModel extends ViewModel {
         l.setListingId(o != null ? o.getListingId() : food.newListingId());
         l.setProviderId(provider.getUid());
         l.setProviderName(provider.displayName());
+        l.setProviderLogoUrl(provider.getProfileImageUrl());
         if (provider instanceof Provider) l.setProviderType(((Provider) provider).getProviderType());
         l.setTitle(d.title.trim());
         l.setDescription(d.description.trim());

@@ -64,7 +64,8 @@ public class CharityVerificationViewModel extends ViewModel {
             write(v);
             return;
         }
-        runner.submit(new ImageCompressionTask(resolver, doc), new ResultCallback<byte[]>() {
+        runner.submit(new ImageCompressionTask(resolver, doc, com.sharebite.app.utils.ServiceLocator.get().images().maxDimensionPx(),
+                com.sharebite.app.utils.ServiceLocator.get().images().maxBytes()), new ResultCallback<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 services.images().uploadVerificationDocument(v.getOrganizationId(), bytes, new ResultCallback<String>() {

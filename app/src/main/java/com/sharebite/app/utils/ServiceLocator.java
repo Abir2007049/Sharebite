@@ -50,7 +50,10 @@ public final class ServiceLocator {
 
     private ServiceLocator(Context context) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        imageStorage = new FirebaseImageStorage(FirebaseStorage::getInstance);
+        // Firebase Storage needs the Blaze plan on new projects; by default photos go to Firestore.
+        imageStorage = BuildConfig.USE_CLOUD_STORAGE
+                ? new FirebaseImageStorage(FirebaseStorage::getInstance)
+                : new com.sharebite.app.data.repository.FirestoreImageStorage(db);
         userRepository = new FirestoreUserRepository(db);
         authRepository = new FirebaseAuthRepository(FirebaseAuth.getInstance(), userRepository);
         foodRepository = new FirestoreFoodRepository(db, imageStorage);

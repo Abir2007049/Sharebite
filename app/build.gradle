@@ -27,6 +27,10 @@ android {
         buildConfigField "boolean", "FIREBASE_CONFIGURED", hasFirebaseConfig.toString()
         buildConfigField "boolean", "USE_FIREBASE_EMULATORS", "false"
         buildConfigField "String", "EMULATOR_HOST", '"10.0.2.2"'
+        // Photos: Firestore by default (works on the free plan). Pass -Psharebite.cloudStorage=true
+        // to use Firebase Storage instead once the project has a Storage bucket.
+        def cloudStorage = (project.findProperty('sharebite.cloudStorage') ?: 'false').toString().toBoolean()
+        buildConfigField "boolean", "USE_CLOUD_STORAGE", cloudStorage.toString()
     }
 
     buildTypes {
