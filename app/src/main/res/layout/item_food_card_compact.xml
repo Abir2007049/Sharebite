@@ -32,6 +32,17 @@
                 android:layout_gravity="top|start"
                 android:layout_margin="@dimen/space_s" />
 
+            <TextView
+                android:id="@+id/pricePill"
+                style="@style/ShareBite.Badge"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/space_s"
+                android:elevation="2dp"
+                android:textAllCaps="false"
+                android:textColor="@color/charcoal"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
             <ImageView
                 android:id="@+id/providerLogo"
                 android:layout_width="32dp"

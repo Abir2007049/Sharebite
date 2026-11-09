@@ -86,6 +86,12 @@ public class FoodCardAdapter extends ListAdapter<ListingItem, FoodCardAdapter.Ho
             h.provider.setText(c.getString(R.string.provider_category_format, l.getProviderName(), category));
         }
         if (h.price != null) bindPrice(c, h, l);
+        if (h.pricePill != null) {
+            h.pricePill.setText(l.getDistributionType() == DistributionType.DISCOUNTED ? Formatters.money(l.getDiscountedPrice())
+                    : c.getString(l.getDistributionType() == DistributionType.FREE ? R.string.price_free : R.string.price_charity));
+            h.pricePill.setTextColor(c.getColor(l.getDistributionType() == DistributionType.FREE ? R.color.free_green
+                    : l.getDistributionType() == DistributionType.CHARITY ? R.color.charity_berry : R.color.charcoal));
+        }
         if (h.distance != null) {
             ViewUtils.visible(h.distance, item.distanceKm != null);
             if (item.distanceKm != null) h.distance.setText(Formatters.distance(c, item.distanceKm));
@@ -137,6 +143,7 @@ public class FoodCardAdapter extends ListAdapter<ListingItem, FoodCardAdapter.Ho
         final TextView provider, price, originalPrice, distance, allergens, eligibility; // FULL only (nullable)
         final TextView allergenAlert; // COMPACT only (nullable)
         final ImageView logo;
+        final TextView pricePill; // COMPACT only (nullable)
 
         Holder(@NonNull View v) {
             super(v);
@@ -153,6 +160,7 @@ public class FoodCardAdapter extends ListAdapter<ListingItem, FoodCardAdapter.Ho
             eligibility = v.findViewById(R.id.eligibilityNote);
             allergenAlert = v.findViewById(R.id.allergenAlert);
             logo = v.findViewById(R.id.providerLogo);
+            pricePill = v.findViewById(R.id.pricePill);
         }
     }
 

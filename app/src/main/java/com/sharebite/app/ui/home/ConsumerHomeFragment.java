@@ -92,7 +92,8 @@ public abstract class ConsumerHomeFragment extends BaseTabFragment {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         User user = currentUser();
         String firstName = user == null ? "" : user.displayName().split(" ")[0];
-        bindHeader(binding.header, getString(R.string.greeting, firstName), getString(subtitleRes()));
+        bindHeader(binding.header, getString(com.sharebite.app.utils.Formatters.greetingFor(
+                java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)), firstName), getString(subtitleRes()));
 
         setupSection(binding.sectionNearby, R.string.section_nearby, nearbyAdapter,
                 ListingQuery.defaults().withSort(ListingQuery.Sort.NEAREST));
@@ -194,13 +195,43 @@ public abstract class ConsumerHomeFragment extends BaseTabFragment {
         s.seeAll.setOnClickListener(v -> openExplore(query));
     }
 
+    private static String categoryEmoji(FoodCategory c) {
+        switch (c) {
+            case COOKED_MEALS: return "\uD83C\uDF5B"; // curry and rice
+            case BAKERY: return "\uD83E\uDD50";       // croissant
+            case FRUITS: return "\uD83C\uDF4E";       // apple
+            case VEGETABLES: return "\uD83E\uDD66";   // broccoli
+            case DAIRY: return "\uD83E\uDD5B";        // glass of milk
+            case PACKAGED: return "\uD83D\uDCE6";     // package
+            default: return "\uD83C\uDF7D";           // plate
+        }
+    }
+
+    @androidx.annotation.ColorRes
+    private static int categoryTint(FoodCategory c) {
+        switch (c) {
+            case COOKED_MEALS: return R.color.discount_amber_bg;
+            case BAKERY: return R.color.warning_bg;
+            case FRUITS: return R.color.error_bg;
+            case VEGETABLES: return R.color.free_green_bg;
+            case DAIRY: return R.color.info_bg;
+            case PACKAGED: return R.color.charity_berry_bg;
+            default: return R.color.neutral_status_bg;
+        }
+    }
+
     private void setupCategoryChips() {
         binding.categoryChips.removeAllViews();
         for (FoodCategory category : FoodCategory.values()) {
-            Chip chip = (Chip) getLayoutInflater().inflate(R.layout.view_chip_action, binding.categoryChips, false);
-            chip.setText(category.labelRes);
-            chip.setOnClickListener(v -> openExplore(ListingQuery.defaults().withCategory(category)));
-            binding.categoryChips.addView(chip);
+            View tile = getLayoutInflater().inflate(R.layout.item_category_tile, binding.categoryChips, false);
+            android.widget.TextView icon = tile.findViewById(R.id.tileIcon);
+            icon.setText(categoryEmoji(category));
+            icon.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                    androidx.core.content.ContextCompat.getColor(requireContext(), categoryTint(category))));
+            ((android.widget.TextView) tile.findViewById(R.id.tileLabel)).setText(category.labelRes);
+            tile.setContentDescription(getString(category.labelRes));
+            tile.setOnClickListener(v -> openExplore(ListingQuery.defaults().withCategory(category)));
+            binding.categoryChips.addView(tile);
         }
     }
 

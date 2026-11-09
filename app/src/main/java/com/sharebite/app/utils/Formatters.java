@@ -25,8 +25,22 @@ public final class Formatters {
 
     @NonNull
     public static String money(double amount) {
-        NumberFormat f = NumberFormat.getCurrencyInstance(Locale.getDefault());
-        return f.format(amount);
+        // Prices are entered in Bangladeshi taka; show the taka sign whatever the phone's locale.
+        NumberFormat f = NumberFormat.getNumberInstance(Locale.getDefault());
+        f.setMinimumFractionDigits(0);
+        f.setMaximumFractionDigits(2);
+        return CURRENCY_SYMBOL + f.format(amount);
+    }
+
+    /** Currency shown with prices (the listing form asks for amounts in this currency). */
+    public static final String CURRENCY_SYMBOL = "\u09F3";
+
+    /** "Good morning / afternoon / evening" for the hour of day (0-23). */
+    @androidx.annotation.StringRes
+    public static int greetingFor(int hourOfDay) {
+        if (hourOfDay >= 5 && hourOfDay < 12) return com.sharebite.app.R.string.greeting_morning;
+        if (hourOfDay >= 12 && hourOfDay < 17) return com.sharebite.app.R.string.greeting_afternoon;
+        return com.sharebite.app.R.string.greeting_evening;
     }
 
     @NonNull

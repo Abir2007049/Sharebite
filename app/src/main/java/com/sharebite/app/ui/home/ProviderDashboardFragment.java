@@ -50,7 +50,8 @@ public class ProviderDashboardFragment extends BaseTabFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         User user = currentUser();
         if (user == null) return;
-        bindHeader(binding.header, getString(R.string.greeting, user.displayName()), getString(R.string.dashboard_subtitle));
+        bindHeader(binding.header, getString(com.sharebite.app.utils.Formatters.greetingFor(
+                java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)), user.displayName()), getString(R.string.dashboard_subtitle));
 
         ReservationAdapter.Listener listener = new ReservationAdapter.Listener() {
             @Override

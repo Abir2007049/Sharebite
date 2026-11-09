@@ -220,11 +220,11 @@
             android:paddingHorizontal="@dimen/screen_padding"
             android:scrollbars="none">
 
-            <com.google.android.material.chip.ChipGroup
+            <LinearLayout
                 android:id="@+id/categoryChips"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:singleLine="true" />
+                android:orientation="horizontal" />
         </HorizontalScrollView>
 
         <!-- Loading placeholders in the shape of the sections below. -->
