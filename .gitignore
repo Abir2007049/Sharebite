@@ -35,3 +35,6 @@ firebase-tests/.seed-credentials.json
 firebase-tests/demo-assets/photos/
 firebase-tests/demo-assets/logos/
 firebase-tests/demo-assets/prepare.log
+
+# Report tooling
+docs/report/node_modules/

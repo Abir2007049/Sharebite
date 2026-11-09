@@ -44,6 +44,21 @@ import java.util.List;
 public class MainActivity extends BaseActivity {
 
     private static final String STATE_TAB = "selectedTab";
+    /** Optional tab to open: home, explore, listings, reservations, impact or profile. */
+    public static final String EXTRA_TAB = "com.sharebite.app.extra.TAB";
+
+    @IdRes
+    private static int tabFor(@Nullable String name) {
+        if (name == null) return R.id.nav_home;
+        switch (name) {
+            case "explore": return R.id.nav_explore;
+            case "listings": return R.id.nav_listings;
+            case "reservations": return R.id.nav_reservations;
+            case "impact": return R.id.nav_impact;
+            case "profile": return R.id.nav_profile;
+            default: return R.id.nav_home;
+        }
+    }
 
     private ActivityMainBinding binding;
     private MainViewModel viewModel;
@@ -72,7 +87,9 @@ public class MainActivity extends BaseActivity {
         binding.bottomNav.inflateMenu(guest ? R.menu.menu_nav_guest
                 : role == UserRole.PROVIDER ? R.menu.menu_nav_provider
                 : role == UserRole.CHARITY ? R.menu.menu_nav_charity : R.menu.menu_nav_receiver);
-        currentTab = savedInstanceState != null ? savedInstanceState.getInt(STATE_TAB, R.id.nav_home) : R.id.nav_home;
+        currentTab = savedInstanceState != null ? savedInstanceState.getInt(STATE_TAB, R.id.nav_home)
+                : tabFor(getIntent().getStringExtra(EXTRA_TAB));
+        if (binding.bottomNav.getMenu().findItem(currentTab) == null) currentTab = R.id.nav_home;
         // Select before attaching the listener so the initial tab is shown exactly once.
         binding.bottomNav.setSelectedItemId(currentTab);
         binding.bottomNav.setOnItemSelectedListener(this::onTabSelected);
